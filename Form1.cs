@@ -84,9 +84,7 @@ namespace adsl_Auto_Interaction_App
             ProccessData(usageReport, activeService, timedPackage, billing);
         }
 
-
-
-
+        /*
         void ProccessData((string, string, string) usageReport, (string, string, string, string, string) activeServiceData, (string, string, string) timedPackageData, string billingData)
         {
             var todayDownloaded = J2A(usageReport.Item2);
@@ -103,6 +101,34 @@ namespace adsl_Auto_Interaction_App
             txtTimedServiceTrafficLeft.Text = Extract.Number(timedPackageData.Item3).ToString();
 
             txtBilling.Text = Extract.Number(billingData).ToString();
+        }
+        */
+        void ProccessData((string, string, string) usageReport, (string, string, string, string, string) activeServiceData, (string, string, string, string, string) timedPackageData, string billingData)
+        {
+            {
+                // --- Usage reports ---
+                var todayDownloaded = J2A(usageReport.Item2);
+                var todayUploaded = J2A(usageReport.Item3);
+                txtDownloaded.Text = todayDownloaded[todayDownloaded.Length - 2].ToString();
+                txtUploaded.Text = todayUploaded[todayUploaded.Length - 2].ToString();
+
+                // --- Active internet service ---
+                txtActiveServiceName.Text = activeServiceData.Item1;
+                txtActiveServiceDaysLeft.Text =
+                    $"{Extract.Number(activeServiceData.Item2)}/{Extract.Number(activeServiceData.Item3)}";
+                txtActiveServiceTraficLeft.Text =
+                    $"{Extract.Number(activeServiceData.Item4)}/{Extract.Number(activeServiceData.Item5)} MB";
+
+                // --- Timed package service ---
+                txtTimedServiceName.Text = timedPackageData.Item1;
+                txtTimedServiceDaysLeft.Text =
+                    $"{Extract.Number(timedPackageData.Item2)}/{Extract.Number(timedPackageData.Item3)}";
+                txtTimedServiceTrafficLeft.Text =
+                    $"{Extract.Number(timedPackageData.Item4)}/{Extract.Number(timedPackageData.Item5)} MB";
+
+                // --- Billing ---
+                txtBilling.Text = Extract.Number(billingData).ToString();
+            }
         }
 
         /// <summary>

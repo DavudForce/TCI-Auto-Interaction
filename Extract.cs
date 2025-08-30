@@ -49,12 +49,12 @@ namespace adsl_Auto_Interaction_App
 
         public async Task<(string serviceName, string daysLeft, string totalDays, string trafficLeft, string trafficTotal)> ActiveInternetService()
         {
-            // --- Extract active service name ---
+            // --- Active service name ---
             string serviceName = await _web.CoreWebView2.ExecuteScriptAsync(
                 "document.querySelector('.uk-card-primary h5').innerText;");
             serviceName = serviceName.Trim('"');
 
-            // --- Days info (first .pie-volume-1 block) ---
+            // --- Days block (.pie-volume-1[0]) ---
             string daysLeft = await _web.CoreWebView2.ExecuteScriptAsync(
                 "document.querySelectorAll('.pie-volume-1')[0].querySelectorAll('.percent span')[0].innerText;");
             daysLeft = daysLeft.Trim('"');
@@ -63,7 +63,7 @@ namespace adsl_Auto_Interaction_App
                 "document.querySelectorAll('.pie-volume-1')[0].querySelectorAll('.percent span')[1].innerText;");
             totalDays = totalDays.Trim('"');
 
-            // --- Traffic info (second .pie-volume-1 block) ---
+            // --- Traffic block (.pie-volume-1[1]) ---
             string trafficLeft = await _web.CoreWebView2.ExecuteScriptAsync(
                 "document.querySelectorAll('.pie-volume-1')[1].querySelectorAll('.percent span')[0].innerText;");
             trafficLeft = trafficLeft.Trim('"');
@@ -75,23 +75,32 @@ namespace adsl_Auto_Interaction_App
             return (serviceName, daysLeft, totalDays, trafficLeft, trafficTotal);
         }
 
-        public async Task<(string, string, string)> TimedPackages()
+        public async Task<(string timedName, string timedDaysLeft, string timedTotalDays, string timedTrafficLeft, string timedTrafficTotal)> TimedPackages()
         {
-            // Extract timed package name
+            // --- Timed package name ---
             string timedName = await _web.CoreWebView2.ExecuteScriptAsync(
-            "document.querySelector('.uk-card-sucsess h5').innerText;");
+                "document.querySelector('.uk-card-primary + div h5').innerText;");
             timedName = timedName.Trim('"');
 
-            // Extract days left and traffic left for timed package
-            string timedDays = await _web.CoreWebView2.ExecuteScriptAsync(
-            "document.querySelectorAll('.pie-volume-2.percentage .percent span')[0].innerText;");
-            timedDays = timedDays.Trim('"');
+            // --- Days block (.pie-volume-2[0]) ---
+            string timedDaysLeft = await _web.CoreWebView2.ExecuteScriptAsync(
+                "document.querySelectorAll('.pie-volume-2')[0].querySelectorAll('.percent span')[0].innerText;");
+            timedDaysLeft = timedDaysLeft.Trim('"');
 
-            string timedTraffic = await _web.CoreWebView2.ExecuteScriptAsync(
-            "document.querySelectorAll('.pie-volume-2.percentage .percent span')[1].innerText;");
-            timedTraffic = timedTraffic.Trim('"');
+            string timedTotalDays = await _web.CoreWebView2.ExecuteScriptAsync(
+                "document.querySelectorAll('.pie-volume-2')[0].querySelectorAll('.percent span')[1].innerText;");
+            timedTotalDays = timedTotalDays.Trim('"');
 
-            return (timedName, timedDays, timedTraffic);
+            // --- Traffic block (.pie-volume-2[1]) ---
+            string timedTrafficLeft = await _web.CoreWebView2.ExecuteScriptAsync(
+                "document.querySelectorAll('.pie-volume-2')[1].querySelectorAll('.percent span')[0].innerText;");
+            timedTrafficLeft = timedTrafficLeft.Trim('"');
+
+            string timedTrafficTotal = await _web.CoreWebView2.ExecuteScriptAsync(
+                "document.querySelectorAll('.pie-volume-2')[1].querySelectorAll('.percent span')[1].innerText;");
+            timedTrafficTotal = timedTrafficTotal.Trim('"');
+
+            return (timedName, timedDaysLeft, timedTotalDays, timedTrafficLeft, timedTrafficTotal);
         }
 
         public async Task<(string, string, string)> UsageReports()
