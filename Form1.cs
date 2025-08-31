@@ -18,7 +18,7 @@ namespace adsl_Auto_Interaction_App
 
         public Form1()
         {
-            AgressiveNotification notification = new AgressiveNotification(5000, "ss", "ss");
+            AgressiveNotification notification = new AgressiveNotification(5000, "Something went wrong", "and we don't know what...", "But", "We WILL find it", "and it won't be pleasant for", "You");
             notification.Show();
 
             InitializeComponent();

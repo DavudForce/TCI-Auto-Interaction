@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Timer = System.Windows.Forms.Timer;
 
@@ -14,76 +7,142 @@ namespace adsl_Auto_Interaction_App
 {
     public partial class AgressiveNotification : Form
     {
-        enum AnimationStyle
+        enum AnimationPhase
         {
-            FadeIn,
-            FadeOut
+            FadeOutText,
+            ChangeText,
+            FadeInText,
+            Wait,
+            FinalFadeOut
         }
-        string[] _texts;
-        int animationDelay = 10;
-        bool shouldStopAnimation = false;
-        Timer animationTimer = new Timer();
-        Timer transationTimer = new Timer();
 
-        public AgressiveNotification()
-        {
-            InitializeComponent();
-        }
+        string[] _texts;
+        int _currentIndex = 0;
+        int _fadeStep = 15;       // how much to change RGB each tick
+        int _animationInterval = 30; // ms
+        int _delay;
+        AnimationPhase _phase;
+
+        Timer animationTimer = new Timer();
+        Timer translationTimer = new Timer();
 
         public AgressiveNotification(int delay, params string[] texts)
         {
             InitializeComponent();
-            transationTimer.Interval = delay < 1000 ? 1000 : delay;
-            animationTimer.Interval = animationDelay;
-            animationTimer.Tick += (s, e) => Animate(lblDescription, AnimationStyle.FadeOut);
-        }
 
-        private void Animate(Control control, AnimationStyle style)
-        {
-            if (shouldStopAnimation)
-            {
-                style = AnimationStyle.FadeIn;
-            }
-            switch (style)
-            {
-                case AnimationStyle.FadeIn:
-                    FadeIn(control);
-                    break;
-                case AnimationStyle.FadeOut:
-                    FadeOut(control);
-                    break;
-                default:
-                    break;
-            }
-        }
+            _texts = texts;
+            _delay = delay < 1000 ? 1000 : delay;
 
-        public void FadeOut(Control control)
-        {
-            try
-            {
-                control.ForeColor = Color.FromArgb(control.ForeColor.R - 5, control.ForeColor.G - 5, control.ForeColor.B - 5);
-            }
-            catch
-            {
-                shouldStopAnimation = true;
-            }
-        }
+            // timers
+            animationTimer.Interval = _animationInterval;
+            animationTimer.Tick += AnimationTimer_Tick;
 
-        public void FadeIn(Control control)
-        {
-            try
-            {
-                control.ForeColor = Color.FromArgb(control.ForeColor.R + 5, control.ForeColor.G + 5, control.ForeColor.B + 5);
-            }
-            catch
-            {
-                shouldStopAnimation = true;
-            }
+            translationTimer.Interval = _delay;
+            translationTimer.Tick += TranslationTimer_Tick;
+
+            lblDescription.Text = texts.Length > 0 ? texts[0] : "";
+            _phase = AnimationPhase.Wait;
         }
 
         private void AgressiveNotification_Load(object sender, EventArgs e)
         {
-            animationTimer.Start();
+            translationTimer.Start();
+        }
+
+        private void TranslationTimer_Tick(object sender, EventArgs e)
+        {
+            if (_phase == AnimationPhase.Wait)
+            {
+                animationTimer.Start();
+                _phase = AnimationPhase.FadeOutText;
+            }
+        }
+
+        private void AnimationTimer_Tick(object sender, EventArgs e)
+        {
+            switch (_phase)
+            {
+                case AnimationPhase.FadeOutText:
+                    if (FadeOutLabel(lblDescription))
+                    {
+                        _phase = AnimationPhase.ChangeText;
+                    }
+                    break;
+
+                case AnimationPhase.ChangeText:
+                    if (_currentIndex < _texts.Length - 1)
+                    {
+                        _currentIndex++;
+                        lblDescription.Text = _texts[_currentIndex];
+                        _phase = AnimationPhase.FadeInText;
+                    }
+                    else
+                    {
+                        // last cycle finished
+                        lblDescription.Text = "Consider this as a \"friendly\" warning";
+                        _phase = AnimationPhase.FadeInText;
+                    }
+                    break;
+
+                case AnimationPhase.FadeInText:
+                    if (FadeInLabel(lblDescription))
+                    {
+                        if (_currentIndex < _texts.Length - 1)
+                        {
+                            _phase = AnimationPhase.Wait;
+                            animationTimer.Stop();
+                        }
+                        else
+                        {
+                            // after the "friendly warning" fade-in
+                            translationTimer.Stop();
+                            Timer delay = new Timer();
+                            delay.Interval = 3000;
+                            delay.Tick += (s, ev) =>
+                            {
+                                delay.Stop();
+                                _phase = AnimationPhase.FinalFadeOut;
+                            };
+                            delay.Start();
+                        }
+                    }
+                    break;
+
+                case AnimationPhase.FinalFadeOut:
+                    if (FadeOutForm())
+                    {
+                        animationTimer.Stop();
+                        this.Close();
+                    }
+                    break;
+            }
+        }
+
+        // --- fade helpers ---
+        private bool FadeOutLabel(Label lbl)
+        {
+            int r = Math.Max(0, lbl.ForeColor.R - _fadeStep);
+            int g = Math.Max(0, lbl.ForeColor.G - _fadeStep);
+            int b = Math.Max(0, lbl.ForeColor.B - _fadeStep);
+
+            lbl.ForeColor = Color.FromArgb(r, g, b);
+            return (r == 0 && g == 0 && b == 0);
+        }
+
+        private bool FadeInLabel(Label lbl)
+        {
+            int r = Math.Min(255, lbl.ForeColor.R + _fadeStep);
+            int g = Math.Min(255, lbl.ForeColor.G + _fadeStep);
+            int b = Math.Min(255, lbl.ForeColor.B + _fadeStep);
+
+            lbl.ForeColor = Color.FromArgb(r, g, b);
+            return (r == 255 && g == 255 && b == 255);
+        }
+
+        private bool FadeOutForm()
+        {
+            this.Opacity -= 0.05;
+            return this.Opacity <= 0;
         }
     }
 }
