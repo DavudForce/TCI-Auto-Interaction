@@ -63,6 +63,7 @@
             Text = "Why did you do this?";
             TopMost = true;
             WindowState = FormWindowState.Maximized;
+            FormClosing += AgressiveNotification_FormClosing;
             Load += AgressiveNotification_Load;
             ResumeLayout(false);
         }

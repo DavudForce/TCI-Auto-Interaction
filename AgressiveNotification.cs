@@ -22,13 +22,17 @@ namespace adsl_Auto_Interaction_App
         int _animationInterval = 30; // ms
         int _delay;
         AnimationPhase _phase;
+        bool useSounds = false;
 
         Timer animationTimer = new Timer();
         Timer translationTimer = new Timer();
 
-        public AgressiveNotification(int delay, params string[] texts)
+        public AgressiveNotification(bool aggerate, int delay, params string[] texts)
         {
             InitializeComponent();
+
+            if (aggerate)
+                useSounds = true;
 
             _texts = texts;
             _delay = delay < 1000 ? 1000 : delay;
@@ -46,6 +50,29 @@ namespace adsl_Auto_Interaction_App
 
         private void AgressiveNotification_Load(object sender, EventArgs e)
         {
+            Cursor.Hide();
+
+            // Force form to topmost temporarily
+            this.TopMost = true;
+
+            // Bring to front and focus
+            this.BringToFront();
+            this.Activate();
+            this.Focus();
+
+            if (useSounds)
+                MySoundPlayer.Play(Sound.Fatal);
+
+            // Reset TopMost after a short delay
+            Timer topmostReset = new Timer();
+            topmostReset.Interval = 100; // 0.1 second
+            topmostReset.Tick += (s, ev) =>
+            {
+                topmostReset.Stop();
+                this.TopMost = false;
+            };
+            topmostReset.Start();
+
             translationTimer.Start();
         }
 
@@ -143,6 +170,11 @@ namespace adsl_Auto_Interaction_App
         {
             this.Opacity -= 0.05;
             return this.Opacity <= 0;
+        }
+
+        private void AgressiveNotification_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Cursor.Show();
         }
     }
 }
