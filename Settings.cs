@@ -10,6 +10,13 @@ using System.Windows.Forms;
 
 namespace adsl_Auto_Interaction_App
 {
+    public enum WarningTier
+    {
+        Politely,
+        Normally,
+        Aggressively,
+        Godmode
+    };
     public partial class Settings : Form
     {
         public static readonly string settingPath = @"C://ProgramData/BESH/adsl-interaction/adsl_Auto-Interaction_App/data/settings.dat";
@@ -18,6 +25,7 @@ namespace adsl_Auto_Interaction_App
         Form1 _parentForm;
 
         public SettingsModule settings;
+        public static SettingsModule staticSettings;
 
         public Settings(Form1 parentForm)
         {
@@ -38,9 +46,9 @@ namespace adsl_Auto_Interaction_App
             else
             {
                 settings = requestResult.Item1;
+                staticSettings = requestResult.Item1;
                 FillData();
             }
-            
         }
 
         void FillData()
@@ -51,6 +59,7 @@ namespace adsl_Auto_Interaction_App
             numTimedDaysLeft.Value = settings.DaysLeftFromTimed;
             numBillingLimit.Value = settings.BillLimit;
             numTolerance.Value = settings.Tolearnce;
+            cmbWarnStyle.SelectedIndex = settings.WarnTierSelectedIndex;
         }
 
         void CheckFileManager()
@@ -89,7 +98,8 @@ namespace adsl_Auto_Interaction_App
                 DailyUploadLimit = ToInt(numUploadLimit.Value),
                 DaysLeftFromActive = ToInt(numActiveDaysLeft.Value),
                 DaysLeftFromTimed = ToInt(numTimedDaysLeft.Value),
-                Tolearnce = numTolerance.Value
+                Tolearnce = numTolerance.Value,
+                WarnTierSelectedIndex = cmbWarnStyle.SelectedIndex
             };
 
             fileManager.SetSettings(settings);

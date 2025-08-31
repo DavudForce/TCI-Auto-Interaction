@@ -14,5 +14,6 @@ namespace adsl_Auto_Interaction_App
         public int DaysLeftFromTimed { get; set; }
         public decimal BillLimit { get; set; }
         public decimal Tolearnce { get; set; }
+        public int WarnTierSelectedIndex { get; set; }
     }
 }

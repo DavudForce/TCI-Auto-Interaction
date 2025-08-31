@@ -39,7 +39,8 @@ namespace adsl_Auto_Interaction_App
                     DailyUploadLimit = 400,
                     DaysLeftFromActive = 10,
                     DaysLeftFromTimed = 10,
-                    Tolearnce = 1.0M
+                    Tolearnce = 1.0M,
+                    WarnTierSelectedIndex = 1
                 };
 
                 var settingsJson = JsonSerializer.Serialize(settings);

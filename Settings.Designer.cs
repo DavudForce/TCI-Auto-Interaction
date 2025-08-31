@@ -46,6 +46,8 @@
             label11 = new Label();
             label12 = new Label();
             numTolerance = new NumericUpDown();
+            label13 = new Label();
+            cmbWarnStyle = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)numActiveDaysLeft).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numDownloadLimit).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numTimedDaysLeft).BeginInit();
@@ -207,11 +209,31 @@
             numTolerance.TabIndex = 7;
             numTolerance.Value = new decimal(new int[] { 100, 0, 0, 0 });
             // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Location = new Point(12, 216);
+            label13.Name = "label13";
+            label13.Size = new Size(80, 15);
+            label13.TabIndex = 0;
+            label13.Text = "Warn me very";
+            // 
+            // cmbWarnStyle
+            // 
+            cmbWarnStyle.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbWarnStyle.FormattingEnabled = true;
+            cmbWarnStyle.Items.AddRange(new object[] { "Politely", "Normally", "Aggressively", "Godmode" });
+            cmbWarnStyle.Location = new Point(98, 213);
+            cmbWarnStyle.Name = "cmbWarnStyle";
+            cmbWarnStyle.Size = new Size(183, 23);
+            cmbWarnStyle.TabIndex = 8;
+            // 
             // Settings
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(310, 204);
+            ClientSize = new Size(310, 248);
+            Controls.Add(cmbWarnStyle);
             Controls.Add(numTolerance);
             Controls.Add(numUploadLimit);
             Controls.Add(label8);
@@ -222,6 +244,7 @@
             Controls.Add(numActiveDaysLeft);
             Controls.Add(label3);
             Controls.Add(label7);
+            Controls.Add(label13);
             Controls.Add(label5);
             Controls.Add(label6);
             Controls.Add(label4);
@@ -264,5 +287,7 @@
         private Label label11;
         private Label label12;
         private NumericUpDown numTolerance;
+        private Label label13;
+        private ComboBox cmbWarnStyle;
     }
 }

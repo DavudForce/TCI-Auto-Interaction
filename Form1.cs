@@ -18,6 +18,9 @@ namespace adsl_Auto_Interaction_App
 
         public Form1()
         {
+            AgressiveNotification notification = new AgressiveNotification(5000, "ss", "ss");
+            notification.Show();
+
             InitializeComponent();
 
             settingsForm = new Settings(this);
@@ -86,6 +89,9 @@ namespace adsl_Auto_Interaction_App
             var activeService = await extract.ActiveInternetService();
             var timedPackage = await extract.TimedPackages();
             var billing = await extract.BillingData();
+
+            WarningManager.WarnIfNeeded.BillLimitReached(Extract.Number(billing));
+
             var percentages = await extract.GetPercentagesAsync();
 
             ProccessData(usageReport, activeService, timedPackage, billing, percentages);
