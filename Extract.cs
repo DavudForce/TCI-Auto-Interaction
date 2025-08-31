@@ -35,6 +35,31 @@ namespace adsl_Auto_Interaction_App
             throw new Exception("No number found in string");
         }
 
+        public async Task<(int activeDaysPercent, int activeTrafficPercent, int timedDaysPercent, int timedTrafficPercent)> GetPercentagesAsync()
+        {
+            // Active Days
+            string activeDays = await _web.CoreWebView2.ExecuteScriptAsync(
+                "document.querySelectorAll('.pie-volume-1')[0].getAttribute('data-percent');");
+            int activeDaysPercent = int.Parse(activeDays.Trim('"'));
+
+            // Active Traffic
+            string activeTraffic = await _web.CoreWebView2.ExecuteScriptAsync(
+                "document.querySelectorAll('.pie-volume-1')[1].getAttribute('data-percent');");
+            int activeTrafficPercent = int.Parse(activeTraffic.Trim('"'));
+
+            // Timed Days
+            string timedDays = await _web.CoreWebView2.ExecuteScriptAsync(
+                "document.querySelectorAll('.pie-volume-2')[0].getAttribute('data-percent');");
+            int timedDaysPercent = int.Parse(timedDays.Trim('"'));
+
+            // Timed Traffic
+            string timedTraffic = await _web.CoreWebView2.ExecuteScriptAsync(
+                "document.querySelectorAll('.pie-volume-2')[1].getAttribute('data-percent');");
+            int timedTrafficPercent = int.Parse(timedTraffic.Trim('"'));
+
+            return (activeDaysPercent, activeTrafficPercent, timedDaysPercent, timedTrafficPercent);
+        }
+
         public async Task<string> BillingData()
         {
             // Extract billing information from the dashboard

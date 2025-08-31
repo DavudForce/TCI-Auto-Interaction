@@ -13,5 +13,6 @@ namespace adsl_Auto_Interaction_App
         public int DaysLeftFromActive { get; set; }
         public int DaysLeftFromTimed { get; set; }
         public decimal BillLimit { get; set; }
+        public decimal Tolearnce { get; set; }
     }
 }

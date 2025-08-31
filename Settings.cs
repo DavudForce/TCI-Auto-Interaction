@@ -13,6 +13,7 @@ namespace adsl_Auto_Interaction_App
     public partial class Settings : Form
     {
         public static readonly string settingPath = @"C://ProgramData/BESH/adsl-interaction/adsl_Auto-Interaction_App/data/settings.dat";
+        public static readonly string schedulePath = @"C://ProgramData/BESH/adsl-interaction/adsl_Auto-Interaction_App/data/schedule.dat";
         FileManager fileManager;
         Form1 _parentForm;
 
@@ -49,6 +50,7 @@ namespace adsl_Auto_Interaction_App
             numActiveDaysLeft.Value = settings.DaysLeftFromActive;
             numTimedDaysLeft.Value = settings.DaysLeftFromTimed;
             numBillingLimit.Value = settings.BillLimit;
+            numTolerance.Value = settings.Tolearnce;
         }
 
         void CheckFileManager()
@@ -86,7 +88,8 @@ namespace adsl_Auto_Interaction_App
                 DailyDownloadLimit = ToInt(numDownloadLimit.Value),
                 DailyUploadLimit = ToInt(numUploadLimit.Value),
                 DaysLeftFromActive = ToInt(numActiveDaysLeft.Value),
-                DaysLeftFromTimed = ToInt(numTimedDaysLeft.Value)
+                DaysLeftFromTimed = ToInt(numTimedDaysLeft.Value),
+                Tolearnce = numTolerance.Value
             };
 
             fileManager.SetSettings(settings);

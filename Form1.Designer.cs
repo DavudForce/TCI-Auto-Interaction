@@ -32,6 +32,15 @@
             web = new Microsoft.Web.WebView2.WinForms.WebView2();
             splitContainer1 = new SplitContainer();
             panel1 = new Panel();
+            groupBox4 = new GroupBox();
+            label17 = new Label();
+            lblTimedTrafficPercentage = new Label();
+            lblTimedDaysPercentage = new Label();
+            lblActiveDaysPercentage = new Label();
+            lblActiveTrafficPercentage = new Label();
+            label21 = new Label();
+            label20 = new Label();
+            label16 = new Label();
             groupBox3 = new GroupBox();
             txtUploaded = new TextBox();
             txtDownloaded = new TextBox();
@@ -73,6 +82,7 @@
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
             panel1.SuspendLayout();
+            groupBox4.SuspendLayout();
             groupBox3.SuspendLayout();
             groupBox2.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -86,7 +96,7 @@
             web.Dock = DockStyle.Fill;
             web.Location = new Point(0, 0);
             web.Name = "web";
-            web.Size = new Size(262, 448);
+            web.Size = new Size(262, 423);
             web.TabIndex = 0;
             web.ZoomFactor = 1D;
             // 
@@ -113,13 +123,14 @@
             splitContainer1.Panel2.Controls.Add(label3);
             splitContainer1.Panel2.Controls.Add(label2);
             splitContainer1.Panel2.Controls.Add(label1);
-            splitContainer1.Size = new Size(649, 448);
+            splitContainer1.Size = new Size(649, 423);
             splitContainer1.SplitterDistance = 262;
             splitContainer1.TabIndex = 1;
             // 
             // panel1
             // 
             panel1.AutoScroll = true;
+            panel1.Controls.Add(groupBox4);
             panel1.Controls.Add(groupBox3);
             panel1.Controls.Add(txtBilling);
             panel1.Controls.Add(groupBox2);
@@ -128,8 +139,97 @@
             panel1.Controls.Add(label4);
             panel1.Location = new Point(29, 176);
             panel1.Name = "panel1";
-            panel1.Size = new Size(346, 262);
+            panel1.Size = new Size(346, 235);
             panel1.TabIndex = 3;
+            // 
+            // groupBox4
+            // 
+            groupBox4.Controls.Add(label17);
+            groupBox4.Controls.Add(lblTimedTrafficPercentage);
+            groupBox4.Controls.Add(lblTimedDaysPercentage);
+            groupBox4.Controls.Add(lblActiveDaysPercentage);
+            groupBox4.Controls.Add(lblActiveTrafficPercentage);
+            groupBox4.Controls.Add(label21);
+            groupBox4.Controls.Add(label20);
+            groupBox4.Controls.Add(label16);
+            groupBox4.Location = new Point(5, 339);
+            groupBox4.Name = "groupBox4";
+            groupBox4.Size = new Size(319, 99);
+            groupBox4.TabIndex = 10;
+            groupBox4.TabStop = false;
+            groupBox4.Text = "Percentages";
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Location = new Point(17, 38);
+            label17.Name = "label17";
+            label17.Size = new Size(127, 15);
+            label17.TabIndex = 0;
+            label17.Text = "Active days remaining:";
+            // 
+            // lblTimedTrafficPercentage
+            // 
+            lblTimedTrafficPercentage.AutoSize = true;
+            lblTimedTrafficPercentage.Location = new Point(141, 56);
+            lblTimedTrafficPercentage.Name = "lblTimedTrafficPercentage";
+            lblTimedTrafficPercentage.Size = new Size(35, 15);
+            lblTimedTrafficPercentage.TabIndex = 0;
+            lblTimedTrafficPercentage.Text = "000%";
+            // 
+            // lblTimedDaysPercentage
+            // 
+            lblTimedDaysPercentage.AutoSize = true;
+            lblTimedDaysPercentage.Location = new Point(141, 75);
+            lblTimedDaysPercentage.Name = "lblTimedDaysPercentage";
+            lblTimedDaysPercentage.Size = new Size(35, 15);
+            lblTimedDaysPercentage.TabIndex = 0;
+            lblTimedDaysPercentage.Text = "000%";
+            // 
+            // lblActiveDaysPercentage
+            // 
+            lblActiveDaysPercentage.AutoSize = true;
+            lblActiveDaysPercentage.Location = new Point(141, 38);
+            lblActiveDaysPercentage.Name = "lblActiveDaysPercentage";
+            lblActiveDaysPercentage.Size = new Size(35, 15);
+            lblActiveDaysPercentage.TabIndex = 0;
+            lblActiveDaysPercentage.Text = "000%";
+            // 
+            // lblActiveTrafficPercentage
+            // 
+            lblActiveTrafficPercentage.AutoSize = true;
+            lblActiveTrafficPercentage.Location = new Point(141, 20);
+            lblActiveTrafficPercentage.Name = "lblActiveTrafficPercentage";
+            lblActiveTrafficPercentage.Size = new Size(35, 15);
+            lblActiveTrafficPercentage.TabIndex = 0;
+            lblActiveTrafficPercentage.Text = "000%";
+            // 
+            // label21
+            // 
+            label21.AutoSize = true;
+            label21.Location = new Point(17, 75);
+            label21.Name = "label21";
+            label21.Size = new Size(127, 15);
+            label21.TabIndex = 0;
+            label21.Text = "Timed days remaining:";
+            // 
+            // label20
+            // 
+            label20.AutoSize = true;
+            label20.Location = new Point(10, 56);
+            label20.Name = "label20";
+            label20.Size = new Size(134, 15);
+            label20.TabIndex = 0;
+            label20.Text = "Timed traffic remaining:";
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Location = new Point(10, 19);
+            label16.Name = "label16";
+            label16.Size = new Size(134, 15);
+            label16.TabIndex = 0;
+            label16.Text = "Active traffic remaining:";
             // 
             // groupBox3
             // 
@@ -464,7 +564,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(649, 448);
+            ClientSize = new Size(649, 423);
             Controls.Add(splitContainer1);
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
@@ -478,6 +578,8 @@
             splitContainer1.ResumeLayout(false);
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            groupBox4.ResumeLayout(false);
+            groupBox4.PerformLayout();
             groupBox3.ResumeLayout(false);
             groupBox3.PerformLayout();
             groupBox2.ResumeLayout(false);
@@ -527,5 +629,14 @@
         private Label label14;
         private TextBox txtBilling;
         private Label label11;
+        private GroupBox groupBox4;
+        private Label label17;
+        private Label lblActiveDaysPercentage;
+        private Label lblActiveTrafficPercentage;
+        private Label label21;
+        private Label label20;
+        private Label label16;
+        private Label lblTimedTrafficPercentage;
+        private Label lblTimedDaysPercentage;
     }
 }

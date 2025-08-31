@@ -42,11 +42,16 @@
             numUploadLimit = new NumericUpDown();
             label8 = new Label();
             label9 = new Label();
+            label10 = new Label();
+            label11 = new Label();
+            label12 = new Label();
+            numTolerance = new NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)numActiveDaysLeft).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numDownloadLimit).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numTimedDaysLeft).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numBillingLimit).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numUploadLimit).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numTolerance).BeginInit();
             SuspendLayout();
             // 
             // label1
@@ -61,7 +66,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(32, 24);
+            label2.Location = new Point(26, 24);
             label2.Name = "label2";
             label2.Size = new Size(180, 15);
             label2.TabIndex = 0;
@@ -70,7 +75,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(283, 24);
+            label3.Location = new Point(277, 24);
             label3.Name = "label3";
             label3.Size = new Size(25, 15);
             label3.TabIndex = 0;
@@ -94,7 +99,7 @@
             // 
             // numDownloadLimit
             // 
-            numDownloadLimit.Location = new Point(218, 21);
+            numDownloadLimit.Location = new Point(212, 21);
             numDownloadLimit.Maximum = new decimal(new int[] { 100000, 0, 0, 0 });
             numDownloadLimit.Name = "numDownloadLimit";
             numDownloadLimit.Size = new Size(61, 23);
@@ -143,7 +148,7 @@
             // 
             // numUploadLimit
             // 
-            numUploadLimit.Location = new Point(198, 50);
+            numUploadLimit.Location = new Point(192, 50);
             numUploadLimit.Maximum = new decimal(new int[] { 100000, 0, 0, 0 });
             numUploadLimit.Name = "numUploadLimit";
             numUploadLimit.Size = new Size(61, 23);
@@ -152,7 +157,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(265, 52);
+            label8.Location = new Point(259, 52);
             label8.Name = "label8";
             label8.Size = new Size(25, 15);
             label8.TabIndex = 4;
@@ -161,17 +166,53 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(32, 52);
+            label9.Location = new Point(26, 52);
             label9.Name = "label9";
             label9.Size = new Size(164, 15);
             label9.TabIndex = 5;
             label9.Text = "today's upload is grather than";
             // 
+            // label10
+            // 
+            label10.AutoSize = true;
+            label10.Location = new Point(45, 153);
+            label10.Name = "label10";
+            label10.Size = new Size(249, 15);
+            label10.TabIndex = 0;
+            label10.Text = "days remainig and data remaining precentage";
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Location = new Point(180, 177);
+            label11.Name = "label11";
+            label11.Size = new Size(69, 15);
+            label11.TabIndex = 0;
+            label11.Text = "% tolerance";
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Location = new Point(45, 177);
+            label12.Name = "label12";
+            label12.Size = new Size(101, 15);
+            label12.TabIndex = 0;
+            label12.Text = "don't match with ";
+            // 
+            // numTolerance
+            // 
+            numTolerance.Location = new Point(142, 175);
+            numTolerance.Name = "numTolerance";
+            numTolerance.Size = new Size(39, 23);
+            numTolerance.TabIndex = 7;
+            numTolerance.Value = new decimal(new int[] { 100, 0, 0, 0 });
+            // 
             // Settings
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(314, 162);
+            ClientSize = new Size(310, 204);
+            Controls.Add(numTolerance);
             Controls.Add(numUploadLimit);
             Controls.Add(label8);
             Controls.Add(label9);
@@ -184,6 +225,9 @@
             Controls.Add(label5);
             Controls.Add(label6);
             Controls.Add(label4);
+            Controls.Add(label11);
+            Controls.Add(label12);
+            Controls.Add(label10);
             Controls.Add(label2);
             Controls.Add(label1);
             Name = "Settings";
@@ -195,6 +239,7 @@
             ((System.ComponentModel.ISupportInitialize)numTimedDaysLeft).EndInit();
             ((System.ComponentModel.ISupportInitialize)numBillingLimit).EndInit();
             ((System.ComponentModel.ISupportInitialize)numUploadLimit).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numTolerance).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -215,5 +260,9 @@
         private NumericUpDown numUploadLimit;
         private Label label8;
         private Label label9;
+        private Label label10;
+        private Label label11;
+        private Label label12;
+        private NumericUpDown numTolerance;
     }
 }
