@@ -15,5 +15,7 @@ namespace adsl_Auto_Interaction_App
         public decimal BillLimit { get; set; }
         public decimal Tolearnce { get; set; }
         public int WarnTierSelectedIndex { get; set; }
+        public int InternetStatusCheckInterval { get; set; }
+        public bool MinimizeToSystemTray { get; set; }
     }
 }

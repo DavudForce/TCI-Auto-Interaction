@@ -48,12 +48,17 @@
             numTolerance = new NumericUpDown();
             label13 = new Label();
             cmbWarnStyle = new ComboBox();
+            label14 = new Label();
+            chckSystemTray = new CheckBox();
+            label15 = new Label();
+            numInternetStatusCheckInterval = new NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)numActiveDaysLeft).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numDownloadLimit).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numTimedDaysLeft).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numBillingLimit).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numUploadLimit).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numTolerance).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)numInternetStatusCheckInterval).BeginInit();
             SuspendLayout();
             // 
             // label1
@@ -211,8 +216,9 @@
             // 
             // label13
             // 
+            label13.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             label13.AutoSize = true;
-            label13.Location = new Point(12, 216);
+            label13.Location = new Point(12, 260);
             label13.Name = "label13";
             label13.Size = new Size(80, 15);
             label13.TabIndex = 0;
@@ -220,19 +226,59 @@
             // 
             // cmbWarnStyle
             // 
+            cmbWarnStyle.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             cmbWarnStyle.DropDownStyle = ComboBoxStyle.DropDownList;
             cmbWarnStyle.FormattingEnabled = true;
             cmbWarnStyle.Items.AddRange(new object[] { "Politely", "Normally", "Aggressively", "Godmode" });
-            cmbWarnStyle.Location = new Point(98, 213);
+            cmbWarnStyle.Location = new Point(98, 257);
             cmbWarnStyle.Name = "cmbWarnStyle";
             cmbWarnStyle.Size = new Size(183, 23);
             cmbWarnStyle.TabIndex = 8;
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new Point(12, 208);
+            label14.Name = "label14";
+            label14.Size = new Size(149, 15);
+            label14.TabIndex = 9;
+            label14.Text = "Check internet status every";
+            // 
+            // chckSystemTray
+            // 
+            chckSystemTray.AutoSize = true;
+            chckSystemTray.Location = new Point(12, 230);
+            chckSystemTray.Name = "chckSystemTray";
+            chckSystemTray.Size = new Size(152, 19);
+            chckSystemTray.TabIndex = 10;
+            chckSystemTray.Text = "Minimize to system tray";
+            chckSystemTray.UseVisualStyleBackColor = true;
+            // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Location = new Point(208, 208);
+            label15.Name = "label15";
+            label15.Size = new Size(39, 15);
+            label15.TabIndex = 9;
+            label15.Text = "Hours";
+            // 
+            // numInternetStatusCheckInterval
+            // 
+            numInternetStatusCheckInterval.Location = new Point(163, 206);
+            numInternetStatusCheckInterval.Name = "numInternetStatusCheckInterval";
+            numInternetStatusCheckInterval.Size = new Size(39, 23);
+            numInternetStatusCheckInterval.TabIndex = 11;
             // 
             // Settings
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(310, 248);
+            ClientSize = new Size(308, 294);
+            Controls.Add(numInternetStatusCheckInterval);
+            Controls.Add(chckSystemTray);
+            Controls.Add(label15);
+            Controls.Add(label14);
             Controls.Add(cmbWarnStyle);
             Controls.Add(numTolerance);
             Controls.Add(numUploadLimit);
@@ -253,6 +299,8 @@
             Controls.Add(label10);
             Controls.Add(label2);
             Controls.Add(label1);
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
+            MinimumSize = new Size(324, 333);
             Name = "Settings";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Settings";
@@ -263,6 +311,7 @@
             ((System.ComponentModel.ISupportInitialize)numBillingLimit).EndInit();
             ((System.ComponentModel.ISupportInitialize)numUploadLimit).EndInit();
             ((System.ComponentModel.ISupportInitialize)numTolerance).EndInit();
+            ((System.ComponentModel.ISupportInitialize)numInternetStatusCheckInterval).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -289,5 +338,9 @@
         private NumericUpDown numTolerance;
         private Label label13;
         private ComboBox cmbWarnStyle;
+        private Label label14;
+        private CheckBox chckSystemTray;
+        private Label label15;
+        private NumericUpDown numInternetStatusCheckInterval;
     }
 }

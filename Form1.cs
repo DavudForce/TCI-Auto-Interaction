@@ -11,8 +11,9 @@ namespace adsl_Auto_Interaction_App
         Settings settingsForm;
         SettingsModule settings;
         Timer checkTimer;
-        int checkInterval = 12;
+        int checkInterval = 6; // every 6 hours
         bool failFast = false;
+        bool webNavigationCompelete = false;
         bool bootUp = true; // Indicates if the application still in "start up" mode
 
         ScheduleManager scheduleManager; // Manages 12h check schedule
@@ -33,6 +34,11 @@ namespace adsl_Auto_Interaction_App
             InitializeComponent();
 
             settingsForm = new Settings(this);
+            settings = settingsForm.settings;
+            checkInterval = settings.InternetStatusCheckInterval;
+            if (settingsForm.settingsWasMissing)
+                WarningManager.RiseSettingsFileMissingWarning();
+
             checkTimer = new Timer();
 
             scheduleManager = new ScheduleManager(); // Initialize schedule manager
@@ -63,9 +69,6 @@ namespace adsl_Auto_Interaction_App
             connectionCheckTimer.Start();
 
             extract = new Extract(web);
-
-            // Schedule the automatic 12h data check
-            ScheduleNextCheck();
         }
 
         bool CheckConnection()
@@ -89,6 +92,11 @@ namespace adsl_Auto_Interaction_App
         private async void btnRetrieveData_Click(object sender, EventArgs e)
         {
             await DoDataCheck();
+
+            if (webNavigationCompelete)
+                // Schedule the automatic 12h data check
+                ScheduleNextCheck();
+            else MessageBox.Show("Please wait for the WebView to finish navigation");
         }
 
         // Reusable method for scheduled or manual data checks
@@ -102,7 +110,9 @@ namespace adsl_Auto_Interaction_App
 
             ProccessData(usageReport, activeService, timedPackage, billing, percentages);
             // Update next scheduled check
-            scheduleManager.UpdateNextCheck(TimeSpan.FromHours(checkInterval));
+            //scheduleManager.UpdateNextCheck(TimeSpan.FromHours(checkInterval));
+            //Shortned for debugging 
+            scheduleManager.UpdateNextCheck(TimeSpan.FromMinutes(checkInterval));
 
             CheckWarnings(usageReport, activeService, timedPackage, billing, percentages);
         }
@@ -144,7 +154,7 @@ namespace adsl_Auto_Interaction_App
         void ProccessData((string, string, string) usageReport, (string, string, string, string, string) activeServiceData,
             (string, string, string, string, string) timedPackageData, string billingData, (int, int, int, int) percentages)
         {
-            
+
 
             var todayDownloaded = J2A(usageReport.Item2);
             var todayUploaded = J2A(usageReport.Item3);
@@ -208,6 +218,50 @@ namespace adsl_Auto_Interaction_App
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             //MessageBox.Show(e.CloseReason.ToString());
+        }
+        private void trayIcon_DoubleClick(object sender, EventArgs e)
+        {
+            RestoreFromTray();
+        }
+
+        private void HideToTray()
+        {
+            if (settings.MinimizeToSystemTray)
+            {
+                trayIcon.Visible = true;
+                this.Hide(); // hide the window
+            }
+        }
+
+        private void RestoreFromTray()
+        {
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+            this.Activate();
+            trayIcon.Visible = false;
+        }
+
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                if (settings.MinimizeToSystemTray)
+                {
+                    Notification n = new Notification();
+                    HideToTray();
+                    n.UpMost(NoticficationStyle.Info, "Application minimized to system tray. You can re-open it via duble clicking on the icon", 6000);
+                }
+            }
+        }
+
+        private void web_NavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
+        {
+            webNavigationCompelete = true;
+        }
+
+        private void web_NavigationStarting(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationStartingEventArgs e)
+        {
+            webNavigationCompelete = false;
         }
     }
 }

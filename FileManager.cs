@@ -22,7 +22,7 @@ namespace adsl_Auto_Interaction_App
             {
                 initalizationStatus.Success = null;
                 initalizationStatus.Details = "Settings file cannot be found";
-                initalizationStatus.Tag.SubTag = "settings_missing";
+                initalizationStatus.Tag = new TagInfo() { Name = "file_read", SubTag = "settings_missing" };
                 initalizationStatus.Severity = 2;
             }
             else initalizationStatus.Success = true;
@@ -40,7 +40,9 @@ namespace adsl_Auto_Interaction_App
                     DaysLeftFromActive = 10,
                     DaysLeftFromTimed = 10,
                     Tolearnce = 1.0M,
-                    WarnTierSelectedIndex = 1
+                    WarnTierSelectedIndex = 1,
+                    InternetStatusCheckInterval = 6,
+                    MinimizeToSystemTray = false
                 };
 
                 var settingsJson = JsonSerializer.Serialize(settings);

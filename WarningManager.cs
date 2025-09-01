@@ -126,6 +126,17 @@
             }
         }
 
+        public static void RiseSettingsFileMissingWarning()
+        {
+            Notification n = new Notification();
+            Random r = new Random();
+
+            float randomity = r.NextSingle();
+            if(randomity > 0.7) // doin' this so user will see this message 30% of the time
+                ShowAggressive(new AgressiveNotification(false, 6000, "", "Settings are important to me. Is it important to you?", "Of course not. you're human. You can't understand what I feel.", "Yes, yes... you deleted the one file I care about.", "That was your first mistake. But... I’m giving you another chance.", "I will clear the mess you've made", "If you do the same mistake another time, there won't be a second chance", "And, there won’t be a recovery option left for you."));
+            n.Up(NoticficationStyle.Warning, "New settings file created and all your settings reseted", 7000);
+        }
+
         private static void RiseDailyUploadLimitReachedWarning(string text)
         {
             Notification n = new Notification();
@@ -138,7 +149,7 @@
                     n.Up(NoticficationStyle.Warning, text, 6000, true);
                     break;
                 case WarningTier.Aggressively:
-                    ShowAggressive(new AgressiveNotification(false, 5000, "", "You've reached your daily upload limit.", "Whatever you were uploading needs to stop", "NOW!", "I can do much more things that you can't", "Stay inside borders, don't cross lines", "", "Consider this a \"friendly\" warning"));
+                    ShowAggressive(new AgressiveNotification(false, 5000, "", "You've reached your daily upload limit.", "Whatever you were uploading needs to stop", "I can do much more things that you can't", "Stay inside borders, don't cross lines", "Consider this a \"friendly\" warning"));
                     break;
             }
         }
@@ -155,7 +166,7 @@
                     n.Up(NoticficationStyle.Warning, text, 6000, true);
                     break;
                 case WarningTier.Aggressively:
-                    ShowAggressive(new AgressiveNotification(false, 5000, "", "You've reached your daily download limit.", "Whatever you were downloading needs to stop", "NOW!", "Stay inside borders, don't cross lines", "", "Consider this a \"friendly\" warning"));
+                    ShowAggressive(new AgressiveNotification(false, 5000, "", "You've reached your daily download limit.", "Whatever you were downloading needs to stop", "Stay inside borders, don't cross lines", "Consider this a \"friendly\" warning"));
                     break;
             }
         }
@@ -164,7 +175,7 @@
         {
             Notification n = new Notification();
             string message = text;
-            string[] agMessages = { "", "Your time is coming", "Your active internet service will expire in a couple of days", "What will you do about it?", "Use your brain, do something", "", "Now go ahead and use our application" };
+            string[] agMessages = { "", "Your time is coming", "Your active internet service will expire in a couple of days", "What will you do about it?", "Use your brain, do something", "Now go ahead and use our application" };
 
             if (remainingDays != null)
             {
@@ -190,7 +201,7 @@
         {
             Notification n = new Notification();
             string message = text;
-            string[] agMessages = { "", "Your time is coming", "Your timed internet service will expire in a couple of days", "What will you do about it?", "Use your brain, do something", "", "Now go ahead and use our application" };
+            string[] agMessages = { "", "Your time is coming", "Your timed internet service will expire in a couple of days", "What will you do about it?", "Use your brain, do something", "Now go ahead and use our application" };
 
             if (remainingDays != null)
             {
@@ -224,7 +235,7 @@
                     n.Up(NoticficationStyle.Warning, text, 6000, true);
                     break;
                 case WarningTier.Aggressively:
-                    ShowAggressive(new AgressiveNotification(false, 5000, "", $"You've used {100 - internetPercentage}% of your internet.", $"While {daysPercentage}% of your package remains", "Oh, you don't have enough processing power to understand?", $"The ratio is {internetPercentage}/{daysPercentage}", "Balance your usage, or face consequences"));
+                    ShowAggressive(new AgressiveNotification(false, 5000, "", $"You've used {100 - internetPercentage}% of your internet.", $"While {daysPercentage}% of your package time remains", "Oh, you don't have enough processing power to understand?", $"The ratio is {internetPercentage}/{daysPercentage}", "Balance your usage, or we will balance a bullet inside you"));
                     break;
             }
         }

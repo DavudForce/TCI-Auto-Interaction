@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             web = new Microsoft.Web.WebView2.WinForms.WebView2();
             splitContainer1 = new SplitContainer();
             panel1 = new Panel();
@@ -76,6 +77,7 @@
             label2 = new Label();
             label1 = new Label();
             connectionCheckTimer = new System.Windows.Forms.Timer(components);
+            trayIcon = new NotifyIcon(components);
             ((System.ComponentModel.ISupportInitialize)web).BeginInit();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).BeginInit();
             splitContainer1.Panel1.SuspendLayout();
@@ -99,6 +101,8 @@
             web.Size = new Size(262, 423);
             web.TabIndex = 0;
             web.ZoomFactor = 1D;
+            web.NavigationStarting += web_NavigationStarting;
+            web.NavigationCompleted += web_NavigationCompleted;
             // 
             // splitContainer1
             // 
@@ -560,17 +564,26 @@
             connectionCheckTimer.Interval = 10000;
             connectionCheckTimer.Tick += timer_Tick;
             // 
+            // trayIcon
+            // 
+            trayIcon.Icon = (Icon)resources.GetObject("trayIcon.Icon");
+            trayIcon.Text = "Auto ADSL Controller";
+            trayIcon.DoubleClick += trayIcon_DoubleClick;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(649, 423);
             Controls.Add(splitContainer1);
+            MinimumSize = new Size(665, 462);
             Name = "Form1";
+            ShowIcon = false;
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Form1";
+            Text = "Main";
             FormClosing += Form1_FormClosing;
             Load += Form1_Load;
+            Resize += Form1_Resize;
             ((System.ComponentModel.ISupportInitialize)web).EndInit();
             splitContainer1.Panel1.ResumeLayout(false);
             splitContainer1.Panel2.ResumeLayout(false);
@@ -639,5 +652,6 @@
         private Label label16;
         private Label lblTimedTrafficPercentage;
         private Label lblTimedDaysPercentage;
+        private NotifyIcon trayIcon;
     }
 }

@@ -24,6 +24,8 @@ namespace adsl_Auto_Interaction_App
         FileManager fileManager;
         Form1 _parentForm;
 
+        public bool settingsWasMissing = false;
+
         public SettingsModule settings;
         public static SettingsModule staticSettings;
         public static WarningTier warningTier;
@@ -84,6 +86,8 @@ namespace adsl_Auto_Interaction_App
             numBillingLimit.Value = settings.BillLimit;
             numTolerance.Value = settings.Tolearnce;
             cmbWarnStyle.SelectedIndex = settings.WarnTierSelectedIndex;
+            numInternetStatusCheckInterval.Value = settings.InternetStatusCheckInterval;
+            chckSystemTray.Checked = settings.MinimizeToSystemTray;
         }
 
         void CheckFileManager()
@@ -92,6 +96,7 @@ namespace adsl_Auto_Interaction_App
             {
                 if (fileManager.initalizationStatus?.Tag.SubTag == "settings_missing")
                 {
+                    settingsWasMissing = true;
                     var res = MessageBox.Show(fileManager.initalizationStatus.Details + "\n\nDo you want to create a new empty settings file?", "Reset settings?", MessageBoxButtons.YesNo);
                     if (res == DialogResult.Yes)
                     {
@@ -123,7 +128,9 @@ namespace adsl_Auto_Interaction_App
                 DaysLeftFromActive = ToInt(numActiveDaysLeft.Value),
                 DaysLeftFromTimed = ToInt(numTimedDaysLeft.Value),
                 Tolearnce = numTolerance.Value,
-                WarnTierSelectedIndex = cmbWarnStyle.SelectedIndex
+                WarnTierSelectedIndex = cmbWarnStyle.SelectedIndex,
+                InternetStatusCheckInterval = ToInt(numInternetStatusCheckInterval.Value),
+                MinimizeToSystemTray = chckSystemTray.Checked
             };
 
             SetWarnTier(cmbWarnStyle.SelectedIndex);

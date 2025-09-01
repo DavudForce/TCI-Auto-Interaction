@@ -133,6 +133,25 @@ namespace adsl_Auto_Interaction_App
             this.ShowDialog();
         }
 
+        public void UpMost(NoticficationStyle style, string text, int closeDelay)
+        {
+            _closeDelay = closeDelay;
+            _closeTimer.Interval = _closeDelay;
+            _closeTimer.Start();
+            PrepareNotification(style, text);
+            this.ShowDialog();
+        }
+
+        public void UpMost(NoticficationStyle style, string text, int closeDelay, bool playSounds)
+        {
+            _closeDelay = closeDelay;
+            _closeTimer.Interval = _closeDelay;
+            _closeTimer.Start();
+            PrepareNotification(style, text);
+            this.ShowDialog();
+            if (playSounds) PlaySound(style);
+        }
+
         public void Down()
         {
             this.Close();
