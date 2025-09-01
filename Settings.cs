@@ -26,6 +26,7 @@ namespace adsl_Auto_Interaction_App
 
         public SettingsModule settings;
         public static SettingsModule staticSettings;
+        public static WarningTier warningTier;
 
         public Settings(Form1 parentForm)
         {
@@ -47,7 +48,30 @@ namespace adsl_Auto_Interaction_App
             {
                 settings = requestResult.Item1;
                 staticSettings = requestResult.Item1;
+
+                SetWarnTier(requestResult.Item1.WarnTierSelectedIndex);
                 FillData();
+            }
+        }
+
+        void SetWarnTier(int selectedIndex)
+        {
+            switch (selectedIndex)
+            {
+                case 0:
+                    warningTier = WarningTier.Politely;
+                    break;
+                case 1:
+                    warningTier = WarningTier.Normally;
+                    break;
+                case 2:
+                    warningTier = WarningTier.Aggressively;
+                    break;
+                case 3:
+                    warningTier = WarningTier.Godmode;
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -102,6 +126,9 @@ namespace adsl_Auto_Interaction_App
                 WarnTierSelectedIndex = cmbWarnStyle.SelectedIndex
             };
 
+            SetWarnTier(cmbWarnStyle.SelectedIndex);
+
+            staticSettings = settings;
             fileManager.SetSettings(settings);
         }
     }

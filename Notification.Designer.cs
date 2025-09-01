@@ -49,7 +49,7 @@
             pnlColor.Dock = DockStyle.Left;
             pnlColor.Location = new Point(0, 0);
             pnlColor.Name = "pnlColor";
-            pnlColor.Size = new Size(10, 100);
+            pnlColor.Size = new Size(10, 114);
             pnlColor.TabIndex = 0;
             // 
             // pnlIcon
@@ -58,7 +58,7 @@
             pnlIcon.Dock = DockStyle.Left;
             pnlIcon.Location = new Point(10, 0);
             pnlIcon.Name = "pnlIcon";
-            pnlIcon.Size = new Size(75, 100);
+            pnlIcon.Size = new Size(75, 114);
             pnlIcon.TabIndex = 1;
             // 
             // pctrIcon
@@ -67,7 +67,7 @@
             pctrIcon.Dock = DockStyle.Fill;
             pctrIcon.Location = new Point(0, 0);
             pctrIcon.Name = "pctrIcon";
-            pctrIcon.Size = new Size(75, 100);
+            pctrIcon.Size = new Size(75, 114);
             pctrIcon.TabIndex = 0;
             pctrIcon.TabStop = false;
             // 
@@ -78,7 +78,7 @@
             pnlText.Dock = DockStyle.Fill;
             pnlText.Location = new Point(85, 0);
             pnlText.Name = "pnlText";
-            pnlText.Size = new Size(249, 100);
+            pnlText.Size = new Size(249, 114);
             pnlText.TabIndex = 2;
             // 
             // pnlDescription
@@ -87,7 +87,7 @@
             pnlDescription.Dock = DockStyle.Fill;
             pnlDescription.Location = new Point(0, 50);
             pnlDescription.Name = "pnlDescription";
-            pnlDescription.Size = new Size(249, 50);
+            pnlDescription.Size = new Size(249, 64);
             pnlDescription.TabIndex = 1;
             // 
             // lblDescription
@@ -96,7 +96,7 @@
             lblDescription.Font = new Font("Segoe UI", 10F);
             lblDescription.Location = new Point(0, 0);
             lblDescription.Name = "lblDescription";
-            lblDescription.Size = new Size(249, 50);
+            lblDescription.Size = new Size(249, 64);
             lblDescription.TabIndex = 0;
             lblDescription.Text = "Descriptioanous";
             // 
@@ -124,7 +124,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(334, 100);
+            ClientSize = new Size(334, 114);
             ControlBox = false;
             Controls.Add(pnlText);
             Controls.Add(pnlIcon);
