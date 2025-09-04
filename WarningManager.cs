@@ -115,10 +115,10 @@
             switch (Settings.warningTier)
             {
                 case WarningTier.Politely:
-                    n.Up(NoticficationStyle.Info, text + " ヾ(^▽^*)))", 6000);
+                    n.Up(NoticficationStyle.Info, text + " ヾ(^▽^*)))", true, false);
                     break;
                 case WarningTier.Normally:
-                    n.Up(NoticficationStyle.Warning, text, 6000, true);
+                    n.Up(NoticficationStyle.Warning, text, true, true);
                     break;
                 case WarningTier.Aggressively:
                     ShowAggressive(new AgressiveNotification(false, 5000, "", "You've reached your bill limit...", "You know what that means?", "*laugh*", "Of course you don't!", "Never exceed your bill limit again", "Or we will meet different next time.", "Consider this a \"friendly\" warning"));
@@ -143,10 +143,10 @@
             switch (Settings.warningTier)
             {
                 case WarningTier.Politely:
-                    n.Up(NoticficationStyle.Info, text + " ヾ(^▽^*)))", 6000);
+                    n.Up(NoticficationStyle.Info, text + " ヾ(^▽^*)))", true, false);
                     break;
                 case WarningTier.Normally:
-                    n.Up(NoticficationStyle.Warning, text, 6000, true);
+                    n.Up(NoticficationStyle.Warning, text, true, true);
                     break;
                 case WarningTier.Aggressively:
                     ShowAggressive(new AgressiveNotification(false, 5000, "", "You've reached your daily upload limit.", "Whatever you were uploading needs to stop", "I can do much more things that you can't", "Stay inside borders, don't cross lines", "Consider this a \"friendly\" warning"));
@@ -160,10 +160,10 @@
             switch (Settings.warningTier)
             {
                 case WarningTier.Politely:
-                    n.Up(NoticficationStyle.Info, text + " ヾ(^▽^*)))", 6000);
+                    n.Up(NoticficationStyle.Info, text + " ヾ(^▽^*)))", true, false);
                     break;
                 case WarningTier.Normally:
-                    n.Up(NoticficationStyle.Warning, text, 6000, true);
+                    n.Up(NoticficationStyle.Warning, text, true, true);
                     break;
                 case WarningTier.Aggressively:
                     ShowAggressive(new AgressiveNotification(false, 5000, "", "You've reached your daily download limit.", "Whatever you were downloading needs to stop", "Stay inside borders, don't cross lines", "Consider this a \"friendly\" warning"));
@@ -186,10 +186,10 @@
             switch (Settings.warningTier)
             {
                 case WarningTier.Politely:
-                    n.Up(NoticficationStyle.Info, message + " ヾ(^▽^*)))", 6000);
+                    n.Up(NoticficationStyle.Info, message + " ヾ(^▽^*)))", true, false);
                     break;
                 case WarningTier.Normally:
-                    n.Up(NoticficationStyle.Warning, message, 6000, true);
+                    n.Up(NoticficationStyle.Warning, message, true, true);
                     break;
                 case WarningTier.Aggressively:
                     ShowAggressive(new AgressiveNotification(false, 5000, agMessages));
@@ -212,10 +212,10 @@
             switch (Settings.warningTier)
             {
                 case WarningTier.Politely:
-                    n.Up(NoticficationStyle.Info, message + " ヾ(^▽^*)))", 6000);
+                    n.Up(NoticficationStyle.Info, message + " ヾ(^▽^*)))", true, false);
                     break;
                 case WarningTier.Normally:
-                    n.Up(NoticficationStyle.Warning, message, 6000, true);
+                    n.Up(NoticficationStyle.Warning, message, true, true);
                     break;
                 case WarningTier.Aggressively:
                     ShowAggressive(new AgressiveNotification(false, 5000, agMessages));
@@ -229,10 +229,10 @@
             switch (Settings.warningTier)
             {
                 case WarningTier.Politely:
-                    n.Up(NoticficationStyle.Info, text + " ヾ(^▽^*)))", 6000);
+                    n.Up(NoticficationStyle.Info, text + " ヾ(^▽^*)))", true, false);
                     break;
                 case WarningTier.Normally:
-                    n.Up(NoticficationStyle.Warning, text, 6000, true);
+                    n.Up(NoticficationStyle.Warning, text, true, true);
                     break;
                 case WarningTier.Aggressively:
                     ShowAggressive(new AgressiveNotification(false, 5000, "", $"You've used {100 - internetPercentage}% of your internet.", $"While {daysPercentage}% of your package time remains", "Oh, you don't have enough processing power to understand?", $"The ratio is {internetPercentage}/{daysPercentage}", "Balance your usage, or we will balance a bullet inside you"));

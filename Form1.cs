@@ -110,9 +110,7 @@ namespace adsl_Auto_Interaction_App
 
             ProccessData(usageReport, activeService, timedPackage, billing, percentages);
             // Update next scheduled check
-            //scheduleManager.UpdateNextCheck(TimeSpan.FromHours(checkInterval));
-            //Shortned for debugging 
-            scheduleManager.UpdateNextCheck(TimeSpan.FromMinutes(checkInterval));
+            scheduleManager.UpdateNextCheck(TimeSpan.FromHours(checkInterval)); // This was FromMinutes()
 
             CheckWarnings(usageReport, activeService, timedPackage, billing, percentages);
         }

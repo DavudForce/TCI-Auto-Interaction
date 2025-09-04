@@ -1,15 +1,5 @@
 ﻿using adsl_Auto_Interaction_App.Properties;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Media;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
 using Timer = System.Windows.Forms.Timer;
 
 namespace adsl_Auto_Interaction_App
@@ -23,12 +13,12 @@ namespace adsl_Auto_Interaction_App
     public partial class Notification : Form
     {
         private string _description;
-        public string Description 
+        public string Description
         {
             get => _description;
             set
             {
-                if(_description != value)
+                if (_description != value)
                 {
                     _description = value;
                     OnDescriptionChanged();
@@ -40,12 +30,24 @@ namespace adsl_Auto_Interaction_App
 
         Timer _closeTimer = new Timer();
 
+        // fade timers
+        Timer _fadeInTimer = new Timer();
+        Timer _fadeOutTimer = new Timer();
+
         public Notification()
         {
-            _closeTimer.Tick += (s, e) => Down();
+            _closeTimer.Tick += (s, e) => StartFadeOut();
+
+            _fadeInTimer.Interval = 30;
+            _fadeInTimer.Tick += FadeInTimer_Tick;
+
+            _fadeOutTimer.Interval = 30;
+            _fadeOutTimer.Tick += FadeOutTimer_Tick;
+
             InitializeComponent();
             PlaceLowerRight();
 
+            this.Opacity = 0; // start invisible
             pctrIcon.SizeMode = PictureBoxSizeMode.Zoom;
         }
 
@@ -80,10 +82,38 @@ namespace adsl_Auto_Interaction_App
             lblDescription.Text = text;
         }
 
+        // ---------- Fade In/Out ----------
+        private void FadeInTimer_Tick(object sender, EventArgs e)
+        {
+            if (this.Opacity < 1.0)
+                this.Opacity += 0.1;
+            else
+                _fadeInTimer.Stop();
+        }
+
+        private void FadeOutTimer_Tick(object sender, EventArgs e)
+        {
+            if (this.Opacity > 0.0)
+                this.Opacity -= 0.1;
+            else
+            {
+                _fadeOutTimer.Stop();
+                this.Close();
+            }
+        }
+
+        private void StartFadeOut()
+        {
+            _closeTimer.Stop();
+            _fadeOutTimer.Start();
+        }
+
+        // ---------- Show ----------
         public void Up(NoticficationStyle style, string text)
         {
             PrepareNotification(style, text);
             this.Show();
+            _fadeInTimer.Start();
         }
 
         public void Up(NoticficationStyle style, string text, int closeDelay)
@@ -93,6 +123,7 @@ namespace adsl_Auto_Interaction_App
             _closeTimer.Start();
             PrepareNotification(style, text);
             this.Show();
+            _fadeInTimer.Start();
         }
 
         public void Up(NoticficationStyle style, string text, int closeDelay, bool playSound)
@@ -102,11 +133,35 @@ namespace adsl_Auto_Interaction_App
             _closeTimer.Start();
             PrepareNotification(style, text);
             this.Show();
+            _fadeInTimer.Start();
 
             if (playSound)
             {
                 PlaySound(style);
             }
+        }
+
+        public void Up(NoticficationStyle style, string text, bool showClose)
+        {
+            PrepareNotification(style, text);
+            this.Show();
+            _fadeInTimer.Start();
+
+            if (showClose)
+                btnClose.Visible = true;
+        }
+
+        public void Up(NoticficationStyle style, string text, bool showClose, bool playSound)
+        {
+            PrepareNotification(style, text);
+            this.Show();
+            _fadeInTimer.Start();
+
+            if (showClose)
+                btnClose.Visible = true;
+
+            if (playSound)
+                PlaySound(style);
         }
 
         private void PlaySound(NoticficationStyle style)
@@ -131,6 +186,7 @@ namespace adsl_Auto_Interaction_App
         {
             PrepareNotification(style, text);
             this.ShowDialog();
+            _fadeInTimer.Start();
         }
 
         public void UpMost(NoticficationStyle style, string text, int closeDelay)
@@ -140,6 +196,7 @@ namespace adsl_Auto_Interaction_App
             _closeTimer.Start();
             PrepareNotification(style, text);
             this.ShowDialog();
+            _fadeInTimer.Start();
         }
 
         public void UpMost(NoticficationStyle style, string text, int closeDelay, bool playSounds)
@@ -149,12 +206,13 @@ namespace adsl_Auto_Interaction_App
             _closeTimer.Start();
             PrepareNotification(style, text);
             this.ShowDialog();
+            _fadeInTimer.Start();
             if (playSounds) PlaySound(style);
         }
 
         public void Down()
         {
-            this.Close();
+            StartFadeOut();
         }
 
         private void PlaceLowerRight()
@@ -169,6 +227,11 @@ namespace adsl_Auto_Interaction_App
 
             this.Left = rightmost.WorkingArea.Right - this.Width;
             this.Top = rightmost.WorkingArea.Bottom - this.Height;
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            _fadeOutTimer.Start();
         }
     }
 }

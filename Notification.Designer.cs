@@ -35,6 +35,7 @@
             pnlDescription = new Panel();
             lblDescription = new Label();
             pnlType = new Panel();
+            btnClose = new Label();
             lblStyle = new Label();
             pnlIcon.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pctrIcon).BeginInit();
@@ -102,12 +103,26 @@
             // 
             // pnlType
             // 
+            pnlType.Controls.Add(btnClose);
             pnlType.Controls.Add(lblStyle);
             pnlType.Dock = DockStyle.Top;
             pnlType.Location = new Point(0, 0);
             pnlType.Name = "pnlType";
             pnlType.Size = new Size(249, 50);
             pnlType.TabIndex = 0;
+            // 
+            // btnClose
+            // 
+            btnClose.AutoSize = true;
+            btnClose.Cursor = Cursors.Hand;
+            btnClose.Font = new Font("Segoe UI", 15F);
+            btnClose.Location = new Point(220, -2);
+            btnClose.Name = "btnClose";
+            btnClose.Size = new Size(26, 28);
+            btnClose.TabIndex = 0;
+            btnClose.Text = "×";
+            btnClose.Visible = false;
+            btnClose.Click += btnClose_Click;
             // 
             // lblStyle
             // 
@@ -142,6 +157,7 @@
             pnlText.ResumeLayout(false);
             pnlDescription.ResumeLayout(false);
             pnlType.ResumeLayout(false);
+            pnlType.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -155,5 +171,6 @@
         private PictureBox pctrIcon;
         private Label lblDescription;
         private Label lblStyle;
+        private Label btnClose;
     }
 }
