@@ -14,21 +14,16 @@ namespace adsl_Auto_Interaction_App
             _web = webView;
         }
 
-        /// <summary>
-        /// Extracts numbers as <see langword="int"/> from Arabic text. Throws exception if providen text does not contains Arabic text
-        /// </summary>
-        /// <param name="input">An <see langword="string"/> that contains Arabic digits</param>
-        /// <returns>Returns extracted number as int32</returns>
-        /// <exception cref="Exception"></exception>
         public static int Number(string input)
         {
-            // 1. Replace Arabic digits with Latin digits
-            var persianDigits = new[] { '۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹' };
-            for (int i = 0; i < persianDigits.Length; i++)
-                input = input.Replace(persianDigits[i], (char)('0' + i));
+            if (input.ToLower() == "null") return 0;
+            if (input.ToLower() == "[]") return 0;
+            if (string.IsNullOrWhiteSpace(input.ToLower())) return 0;
+            var arabicDigits = new[] { '۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹' };
+            for (int i = 0; i < arabicDigits.Length; i++)
+                input = input.Replace(arabicDigits[i], (char)('0' + i));
 
-            // 2. Find the first number in the string
-            var match = Regex.Match(input, @"\d+"); // "\d+" means "keep matching as long as digits continue"
+            var match = Regex.Match(input, @"\d+");
             if (match.Success)
                 return int.Parse(match.Value);
 
@@ -37,112 +32,156 @@ namespace adsl_Auto_Interaction_App
 
         public async Task<(int activeDaysPercent, int activeTrafficPercent, int timedDaysPercent, int timedTrafficPercent)> GetPercentagesAsync()
         {
-            // Active Days
-            string activeDays = await _web.CoreWebView2.ExecuteScriptAsync(
+            int activeDaysPercent = 0;
+            int activeTrafficPercent = 0;
+            int timedDaysPercent = 0;
+            int timedTrafficPercent = 0;
+
+            try
+            {
+                string activeDays = await _web.CoreWebView2.ExecuteScriptAsync(
                 "document.querySelectorAll('.pie-volume-1')[0].getAttribute('data-percent');");
-            int activeDaysPercent = int.Parse(activeDays.Trim('"'));
+                if (activeDays.ToLower() != "null")
+                    activeDaysPercent = int.Parse(activeDays.Trim('"'));
 
-            // Active Traffic
-            string activeTraffic = await _web.CoreWebView2.ExecuteScriptAsync(
-                "document.querySelectorAll('.pie-volume-1')[1].getAttribute('data-percent');");
-            int activeTrafficPercent = int.Parse(activeTraffic.Trim('"'));
+                string activeTraffic = await _web.CoreWebView2.ExecuteScriptAsync(
+                    "document.querySelectorAll('.pie-volume-1')[1].getAttribute('data-percent');");
+                if (activeTraffic.ToLower() != "null")
+                    activeTrafficPercent = int.Parse(activeTraffic.Trim('"'));
 
-            // Timed Days
-            string timedDays = await _web.CoreWebView2.ExecuteScriptAsync(
-                "document.querySelectorAll('.pie-volume-2')[0].getAttribute('data-percent');");
-            int timedDaysPercent = int.Parse(timedDays.Trim('"'));
+                string timedDays = await _web.CoreWebView2.ExecuteScriptAsync(
+                    "document.querySelectorAll('.pie-volume-2')[0].getAttribute('data-percent');");
+                if (timedDays.ToLower() != "null")
+                    timedDaysPercent = int.Parse(timedDays.Trim('"'));
 
-            // Timed Traffic
-            string timedTraffic = await _web.CoreWebView2.ExecuteScriptAsync(
-                "document.querySelectorAll('.pie-volume-2')[1].getAttribute('data-percent');");
-            int timedTrafficPercent = int.Parse(timedTraffic.Trim('"'));
+                string timedTraffic = await _web.CoreWebView2.ExecuteScriptAsync(
+                    "document.querySelectorAll('.pie-volume-2')[1].getAttribute('data-percent');");
+                if (timedTraffic.ToLower() != "null")
+                    timedTrafficPercent = int.Parse(timedTraffic.Trim('"'));
 
-            return (activeDaysPercent, activeTrafficPercent, timedDaysPercent, timedTrafficPercent);
+                return (activeDaysPercent, activeTrafficPercent, timedDaysPercent, timedTrafficPercent);
+            }
+            catch 
+            {
+                Notification n = new Notification();
+                n.Up(NoticficationStyle.Warning, "Please wait for the page to load", 6000, true);
+                return (-1 , -1, -1, -1);
+            }
         }
 
         public async Task<string> BillingData()
         {
-            // Extract billing information from the dashboard
-            string billing = await _web.CoreWebView2.ExecuteScriptAsync
-                ("document.querySelector('.uk-alert-danger p').innerText;");
+            try
+            {
+                string billing = await _web.CoreWebView2.ExecuteScriptAsync(
+                "document.querySelector('.uk-alert-danger p').innerText;");
+                if (billing.ToLower() == "null")
+                    return "null";
 
-            // The result is returned as a JSON string with quotes.
-            // Trim quotes to clean the output:
-            billing = billing.Trim('"');
-            return billing;
+                billing = billing.Trim('"');
+                return billing;
+            }
+            catch 
+            {
+                Notification n = new Notification();
+                n.Up(NoticficationStyle.Warning, "Please wait for the page to load", 6000, true);
+                return "null";
+            }
         }
 
         public async Task<(string serviceName, string daysLeft, string totalDays, string trafficLeft, string trafficTotal)> ActiveInternetService()
         {
-            // --- Active service name ---
-            string serviceName = await _web.CoreWebView2.ExecuteScriptAsync(
+            try
+            {
+                string serviceName = await _web.CoreWebView2.ExecuteScriptAsync(
                 "document.querySelector('.uk-card-primary h5').innerText;");
-            serviceName = serviceName.Trim('"');
+                serviceName = serviceName.ToLower() != "null" ? serviceName.Trim('"') : string.Empty;
 
-            // --- Days block (.pie-volume-1[0]) ---
-            string daysLeft = await _web.CoreWebView2.ExecuteScriptAsync(
-                "document.querySelectorAll('.pie-volume-1')[0].querySelectorAll('.percent span')[0].innerText;");
-            daysLeft = daysLeft.Trim('"');
+                string daysLeft = await _web.CoreWebView2.ExecuteScriptAsync(
+                    "document.querySelectorAll('.pie-volume-1')[0].querySelectorAll('.percent span')[0].innerText;");
+                daysLeft = daysLeft.ToLower() != "null" ? daysLeft.Trim('"') : string.Empty;
 
-            string totalDays = await _web.CoreWebView2.ExecuteScriptAsync(
-                "document.querySelectorAll('.pie-volume-1')[0].querySelectorAll('.percent span')[1].innerText;");
-            totalDays = totalDays.Trim('"');
+                string totalDays = await _web.CoreWebView2.ExecuteScriptAsync(
+                    "document.querySelectorAll('.pie-volume-1')[0].querySelectorAll('.percent span')[1].innerText;");
+                totalDays = totalDays.ToLower() != "null" ? totalDays.Trim('"') : string.Empty;
 
-            // --- Traffic block (.pie-volume-1[1]) ---
-            string trafficLeft = await _web.CoreWebView2.ExecuteScriptAsync(
-                "document.querySelectorAll('.pie-volume-1')[1].querySelectorAll('.percent span')[0].innerText;");
-            trafficLeft = trafficLeft.Trim('"');
+                string trafficLeft = await _web.CoreWebView2.ExecuteScriptAsync(
+                    "document.querySelectorAll('.pie-volume-1')[1].querySelectorAll('.percent span')[0].innerText;");
+                trafficLeft = trafficLeft.ToLower() != "null" ? trafficLeft.Trim('"') : string.Empty;
 
-            string trafficTotal = await _web.CoreWebView2.ExecuteScriptAsync(
-                "document.querySelectorAll('.pie-volume-1')[1].querySelectorAll('.percent span')[1].innerText;");
-            trafficTotal = trafficTotal.Trim('"');
+                string trafficTotal = await _web.CoreWebView2.ExecuteScriptAsync(
+                    "document.querySelectorAll('.pie-volume-1')[1].querySelectorAll('.percent span')[1].innerText;");
+                trafficTotal = trafficTotal.ToLower() != "null" ? trafficTotal.Trim('"') : string.Empty;
 
-            return (serviceName, daysLeft, totalDays, trafficLeft, trafficTotal);
+                return (serviceName, daysLeft, totalDays, trafficLeft, trafficTotal);
+            }
+            catch 
+            {
+                Notification n = new Notification();
+                n.Up(NoticficationStyle.Warning, "Please wait for the page to load", 6000, true);
+                return ("null", "null", "null", "null", "null");
+            }
+
         }
 
         public async Task<(string timedName, string timedDaysLeft, string timedTotalDays, string timedTrafficLeft, string timedTrafficTotal)> TimedPackages()
         {
-            // --- Timed package name ---
-            string timedName = await _web.CoreWebView2.ExecuteScriptAsync(
+            try
+            {
+                string timedName = await _web.CoreWebView2.ExecuteScriptAsync(
                 "document.querySelector('.uk-card-primary + div h5').innerText;");
-            timedName = timedName.Trim('"');
+                timedName = timedName.ToLower() != "null" ? timedName.Trim('"') : string.Empty;
 
-            // --- Days block (.pie-volume-2[0]) ---
-            string timedDaysLeft = await _web.CoreWebView2.ExecuteScriptAsync(
-                "document.querySelectorAll('.pie-volume-2')[0].querySelectorAll('.percent span')[0].innerText;");
-            timedDaysLeft = timedDaysLeft.Trim('"');
+                string timedDaysLeft = await _web.CoreWebView2.ExecuteScriptAsync(
+                    "document.querySelectorAll('.pie-volume-2')[0].querySelectorAll('.percent span')[0].innerText;");
+                timedDaysLeft = timedDaysLeft.ToLower() != "null" ? timedDaysLeft.Trim('"') : string.Empty;
 
-            string timedTotalDays = await _web.CoreWebView2.ExecuteScriptAsync(
-                "document.querySelectorAll('.pie-volume-2')[0].querySelectorAll('.percent span')[1].innerText;");
-            timedTotalDays = timedTotalDays.Trim('"');
+                string timedTotalDays = await _web.CoreWebView2.ExecuteScriptAsync(
+                    "document.querySelectorAll('.pie-volume-2')[0].querySelectorAll('.percent span')[1].innerText;");
+                timedTotalDays = timedTotalDays.ToLower() != "null" ? timedTotalDays.Trim('"') : string.Empty;
 
-            // --- Traffic block (.pie-volume-2[1]) ---
-            string timedTrafficLeft = await _web.CoreWebView2.ExecuteScriptAsync(
-                "document.querySelectorAll('.pie-volume-2')[1].querySelectorAll('.percent span')[0].innerText;");
-            timedTrafficLeft = timedTrafficLeft.Trim('"');
+                string timedTrafficLeft = await _web.CoreWebView2.ExecuteScriptAsync(
+                    "document.querySelectorAll('.pie-volume-2')[1].querySelectorAll('.percent span')[0].innerText;");
+                timedTrafficLeft = timedTrafficLeft.ToLower() != "null" ? timedTrafficLeft.Trim('"') : string.Empty;
 
-            string timedTrafficTotal = await _web.CoreWebView2.ExecuteScriptAsync(
-                "document.querySelectorAll('.pie-volume-2')[1].querySelectorAll('.percent span')[1].innerText;");
-            timedTrafficTotal = timedTrafficTotal.Trim('"');
+                string timedTrafficTotal = await _web.CoreWebView2.ExecuteScriptAsync(
+                    "document.querySelectorAll('.pie-volume-2')[1].querySelectorAll('.percent span')[1].innerText;");
+                timedTrafficTotal = timedTrafficTotal.ToLower() != "null" ? timedTrafficTotal.Trim('"') : string.Empty;
 
-            return (timedName, timedDaysLeft, timedTotalDays, timedTrafficLeft, timedTrafficTotal);
+                return (timedName, timedDaysLeft, timedTotalDays, timedTrafficLeft, timedTrafficTotal);
+            }
+            catch 
+            {
+                Notification n = new Notification();
+                n.Up(NoticficationStyle.Warning, "Please wait for the page to load", 6000, true);
+                return ("null", "null", "null", "null", "null");
+            }
         }
 
         public async Task<(string, string, string)> UsageReports()
         {
-            // Extract usage report from Chart.js
-            string labels = await _web.CoreWebView2.ExecuteScriptAsync(
-            "Chart.instances[0].data.labels;");
+            try
+            {
+                string labels = await _web.CoreWebView2.ExecuteScriptAsync(
+                "Chart.instances[0].data.labels;");
+                labels = labels.ToLower() != "null" ? labels : "[]";
 
-            string downloadData = await _web.CoreWebView2.ExecuteScriptAsync(
-            "Chart.instances[0].data.datasets[0].data;");
+                string downloadData = await _web.CoreWebView2.ExecuteScriptAsync(
+                    "Chart.instances[0].data.datasets[0].data;");
+                downloadData = downloadData.ToLower() != "null" ? downloadData : "[]";
 
-            string uploadData = await _web.CoreWebView2.ExecuteScriptAsync(
-            "Chart.instances[0].data.datasets[1].data;");
-            // Note: These return JSON arrays (e.g., ["1404/06/01","1404/06/02"]).
-            // You can deserialize them into C# arrays using System.Text.Json.
+                string uploadData = await _web.CoreWebView2.ExecuteScriptAsync(
+                    "Chart.instances[0].data.datasets[1].data;");
+                uploadData = uploadData.ToLower() != "null" ? uploadData : "[]";
 
-            return (labels, downloadData, uploadData);
+                return (labels, downloadData, uploadData);
+            }
+            catch 
+            {
+                Notification n = new Notification();
+                n.Up(NoticficationStyle.Warning, "Please wait for the page to load", 6000, true);
+                return ("null", "null", "null");
+            }
         }
     }
 }

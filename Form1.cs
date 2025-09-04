@@ -119,8 +119,12 @@ namespace adsl_Auto_Interaction_App
 
         private void CheckWarnings((string, string, string) usageReport, (string, string, string, string, string) activeServiceData, (string, string, string, string, string) timedPackageData, string billingData, (int, int, int, int) percentages)
         {
+            int currentBill = 0;
+            int activeDaysRemaining = 0;
+            int timedDaysRemaining = 0;
             // Convert billing data
-            int currentBill = Extract.Number(billingData);
+            if (billingData.ToLower() != "null")
+                currentBill = Extract.Number(billingData);
 
             // Extract daily upload/download from usage report
             var todayDownloaded = J2A(usageReport.Item2);
@@ -130,10 +134,12 @@ namespace adsl_Auto_Interaction_App
             int currentUpload = todayUploaded.Length > 1 ? todayUploaded[todayUploaded.Length - 2] : 0;
 
             // Extract active service days
-            int activeDaysRemaining = Extract.Number(activeServiceData.Item2);
+            if (activeServiceData.Item2.ToLower() != "null")
+                activeDaysRemaining = Extract.Number(activeServiceData.Item2);
 
             // Extract timed service days
-            int timedDaysRemaining = Extract.Number(timedPackageData.Item2);
+            if (timedPackageData.Item2.ToLower() != "null")
+                timedDaysRemaining = Extract.Number(timedPackageData.Item2);
 
             // Extract percentages
             int activeDaysPercentage = percentages.Item1;
@@ -142,11 +148,16 @@ namespace adsl_Auto_Interaction_App
             int timedTrafficPercentage = percentages.Item4;
 
             // Run all warning checks
-            WarningManager.WarnIfNeeded.BillLimitReached(currentBill);
-            WarningManager.WarnIfNeeded.DailyDownloadLimitReached(currentDownload);
-            WarningManager.WarnIfNeeded.DailyUploadLimitReached(currentUpload);
-            WarningManager.WarnIfNeeded.ActiveDaysRemaining(activeDaysRemaining);
-            WarningManager.WarnIfNeeded.TimedDaysRemaining(timedDaysRemaining);
+            if (currentBill > 0)
+                WarningManager.WarnIfNeeded.BillLimitReached(currentBill);
+            if (currentDownload > 0)
+                WarningManager.WarnIfNeeded.DailyDownloadLimitReached(currentDownload);
+            if (currentUpload > 0)
+                WarningManager.WarnIfNeeded.DailyUploadLimitReached(currentUpload);
+            if(activeDaysRemaining > 0)
+                WarningManager.WarnIfNeeded.ActiveDaysRemaining(activeDaysRemaining);
+            if(timedDaysRemaining > 0)
+                WarningManager.WarnIfNeeded.TimedDaysRemaining(timedDaysRemaining);
             WarningManager.WarnIfNeeded.Percentages(activeDaysPercentage, activeTrafficPercentage, "Active");
             WarningManager.WarnIfNeeded.Percentages(timedDaysPercentage, timedTrafficPercentage, "Timed");
         }
@@ -158,8 +169,10 @@ namespace adsl_Auto_Interaction_App
 
             var todayDownloaded = J2A(usageReport.Item2);
             var todayUploaded = J2A(usageReport.Item3);
-            txtDownloaded.Text = todayDownloaded[todayDownloaded.Length - 2].ToString(); // The TCI does not include "today"'s data, but instead it's last value is 0. so I actually getting "yesterday" 's value :)
-            txtUploaded.Text = todayUploaded[todayUploaded.Length - 2].ToString(); // ^^^ Same as above comment ^^^
+            if(todayDownloaded.Length > 2)
+                txtDownloaded.Text = todayDownloaded[todayDownloaded.Length - 2].ToString(); // The TCI does not include "today"'s data, but instead it's last value is 0. so I actually getting "yesterday" 's value :)
+            if(todayUploaded.Length > 2)
+                txtUploaded.Text = todayUploaded[todayUploaded.Length - 2].ToString(); // ^^^ Same as above comment ^^^
 
             txtActiveServiceName.Text = activeServiceData.Item1;
             txtActiveServiceDaysLeft.Text = $"{Extract.Number(activeServiceData.Item2)}/{Extract.Number(activeServiceData.Item3)}";
@@ -177,6 +190,11 @@ namespace adsl_Auto_Interaction_App
             lblTimedTrafficPercentage.Text = percentages.Item4.ToString() + "%";
         }
 
+        /// <summary>
+        /// Converts JSON integer array into C# int arrays
+        /// </summary>
+        /// <param name="json">JSON int array</param>
+        /// <returns>The representing C# int array</returns>
         int[] J2A(string json)
         {
             return JsonSerializer.Deserialize<int[]>(json);
