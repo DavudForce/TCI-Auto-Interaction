@@ -141,4 +141,4 @@ Contact information is place in the end of this file.
 **Error "Invalid hex in password file"**: This error rises when server passfile contains invalid password sytax or invalid data. You may need to re-download the passfile from https://sendgb.com/cmMQUeBVbw1. After downloading, copy the `server.beshonic.k` file and replace it with the existing `server.beshonic.k` file located in the same directory where the executable is present. If you follow these steps and still get the same error, [contact](#contact-us) with the developers and let them know your problem.
 
 ## Contact us
-If you having any other issue, please contact us via this E-Mail: keypumbs.team@gmail.com
+If you having any other issue or any suggestions, please contact us via this E-Mail: keypumbs.team@gmail.com
