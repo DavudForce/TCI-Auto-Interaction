@@ -19,8 +19,8 @@ namespace adsl_Auto_Interaction_App
     };
     public partial class Settings : Form
     {
-        public static readonly string settingPath = @"C://ProgramData/BESH/adsl-interaction/adsl_Auto-Interaction_App/data/settings.dat";
-        public static readonly string schedulePath = @"C://ProgramData/BESH/adsl-interaction/adsl_Auto-Interaction_App/data/schedule.dat";
+        public static readonly string settingPath = Path.Combine(Application.StartupPath + @"data/settings.dat");
+        public static readonly string schedulePath = Path.Combine(Application.StartupPath + @"data/schedule.dat");
         FileManager fileManager;
         Form1 _parentForm;
 
