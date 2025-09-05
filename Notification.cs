@@ -4,7 +4,7 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace adsl_Auto_Interaction_App
 {
-    public enum NoticficationStyle
+    public enum NotificationStyle
     {
         Info,
         Warning,
@@ -56,21 +56,21 @@ namespace adsl_Auto_Interaction_App
             lblDescription.Text = _description;
         }
 
-        private void PrepareNotification(NoticficationStyle style, string text)
+        private void PrepareNotification(NotificationStyle style, string text)
         {
             switch (style)
             {
-                case NoticficationStyle.Info:
+                case NotificationStyle.Info:
                     pctrIcon.Image = Resources.info1;
                     lblStyle.Text = "INFO";
                     pnlColor.BackColor = Color.FromArgb(0, 119, 215);
                     break;
-                case NoticficationStyle.Warning:
+                case NotificationStyle.Warning:
                     pctrIcon.Image = Resources.warning1;
                     lblStyle.Text = "WARNING";
                     pnlColor.BackColor = Color.FromArgb(255, 255, 0);
                     break;
-                case NoticficationStyle.Error:
+                case NotificationStyle.Error:
                     pctrIcon.Image = Resources.error1;
                     lblStyle.Text = "ERROR";
                     pnlColor.BackColor = Color.FromArgb(240, 57, 22);
@@ -109,14 +109,14 @@ namespace adsl_Auto_Interaction_App
         }
 
         // ---------- Show ----------
-        public void Up(NoticficationStyle style, string text)
+        public void Up(NotificationStyle style, string text)
         {
             PrepareNotification(style, text);
             this.Show();
             _fadeInTimer.Start();
         }
 
-        public void Up(NoticficationStyle style, string text, int closeDelay)
+        public void Up(NotificationStyle style, string text, int closeDelay)
         {
             _closeDelay = closeDelay;
             _closeTimer.Interval = _closeDelay;
@@ -126,7 +126,7 @@ namespace adsl_Auto_Interaction_App
             _fadeInTimer.Start();
         }
 
-        public void Up(NoticficationStyle style, string text, int closeDelay, bool playSound)
+        public void Up(NotificationStyle style, string text, int closeDelay, bool playSound)
         {
             _closeDelay = closeDelay;
             _closeTimer.Interval = _closeDelay;
@@ -141,7 +141,7 @@ namespace adsl_Auto_Interaction_App
             }
         }
 
-        public void Up(NoticficationStyle style, string text, bool showClose)
+        public void Up(NotificationStyle style, string text, bool showClose)
         {
             PrepareNotification(style, text);
             this.Show();
@@ -151,7 +151,7 @@ namespace adsl_Auto_Interaction_App
                 btnClose.Visible = true;
         }
 
-        public void Up(NoticficationStyle style, string text, bool showClose, bool playSound)
+        public void Up(NotificationStyle style, string text, bool showClose, bool playSound)
         {
             PrepareNotification(style, text);
             this.Show();
@@ -164,17 +164,17 @@ namespace adsl_Auto_Interaction_App
                 PlaySound(style);
         }
 
-        private void PlaySound(NoticficationStyle style)
+        private void PlaySound(NotificationStyle style)
         {
             switch (style)
             {
-                case NoticficationStyle.Info:
+                case NotificationStyle.Info:
                     SystemSounds.Asterisk.Play();
                     break;
-                case NoticficationStyle.Warning:
+                case NotificationStyle.Warning:
                     SystemSounds.Exclamation.Play();
                     break;
-                case NoticficationStyle.Error:
+                case NotificationStyle.Error:
                     SystemSounds.Hand.Play();
                     break;
                 default:
@@ -182,14 +182,14 @@ namespace adsl_Auto_Interaction_App
             }
         }
 
-        public void UpMost(NoticficationStyle style, string text)
+        public void UpMost(NotificationStyle style, string text)
         {
             PrepareNotification(style, text);
             this.ShowDialog();
             _fadeInTimer.Start();
         }
 
-        public void UpMost(NoticficationStyle style, string text, int closeDelay)
+        public void UpMost(NotificationStyle style, string text, int closeDelay)
         {
             _closeDelay = closeDelay;
             _closeTimer.Interval = _closeDelay;
@@ -199,7 +199,7 @@ namespace adsl_Auto_Interaction_App
             _fadeInTimer.Start();
         }
 
-        public void UpMost(NoticficationStyle style, string text, int closeDelay, bool playSounds)
+        public void UpMost(NotificationStyle style, string text, int closeDelay, bool playSounds)
         {
             _closeDelay = closeDelay;
             _closeTimer.Interval = _closeDelay;
@@ -207,6 +207,23 @@ namespace adsl_Auto_Interaction_App
             PrepareNotification(style, text);
             this.ShowDialog();
             _fadeInTimer.Start();
+            if (playSounds) PlaySound(style);
+        }
+
+        public void UpMost(NotificationStyle style, string text, bool showClose)
+        {
+            PrepareNotification(style, text);
+            this.ShowDialog();
+            _fadeInTimer.Start();
+            if (showClose) btnClose.Visible = true;
+        }
+
+        public void UpMost(NotificationStyle style, string text, bool showClose, bool playSounds)
+        {
+            PrepareNotification(style, text);
+            this.ShowDialog();
+            _fadeInTimer.Start();
+            if (showClose) btnClose.Visible = true;
             if (playSounds) PlaySound(style);
         }
 

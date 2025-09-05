@@ -1,101 +1,104 @@
-﻿/*using Microsoft.Web.WebView2.WinForms;
-using System;
+﻿using System;
+using System.IO;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace adsl_Auto_Interaction_App
 {
     public class ValidateConnection
     {
-        private readonly WebView2 _web;
-        private readonly string _serverIp;
-        private readonly int _serverPort;
-        private readonly byte[] _passwordHash;
+        /***************************** CLIENT ***************************/
+        static string configFile = @"C:\ProgramData\BESH\Online Services\ADSL Interaction\adsl_Auto-Interaction_App\server\server.beshonic.h";
+        static string passwordFile = @"C:\ProgramData\BESH\Online Services\ADSL Interaction\adsl_Auto-Interaction_App\server\security\server.beshonic.k";
 
-        /// <summary>
-        /// Synchronous constructor. Loads server data and password hash.
-        /// </summary>
-        /// <param name="webView">The WebView2 instance to display server messages.</param>
-        /// <param name="passwordFile">Path to the password hash file (hex string).</param>
-        public ValidateConnection(WebView2 webView, string passwordFile)
+        private class ServerConfig
         {
-            _web = webView;
-
-            // Load server data (synchronous)
-            (string ip, int port) = FileManager.ServerData.GetServerData();
-            _serverIp = ip;
-            _serverPort = port;
-
-            // Load password hash from file
-            FileManager.ServerData.Prepare();
-            string hashHex = System.IO.File.ReadAllText(passwordFile).Trim();
-            _passwordHash = StringToByteArray(hashHex);
+            public string Adress { get; set; }
+            public int Port { get; set; }
         }
 
-        /// <summary>
-        /// Connects to the server and authenticates using challenge-response.
-        /// </summary>
-        public void ConnectAndAuthenticate()
+        public static async Task<string> RecieveUriAsync()
         {
+            // Load server IP/Port from JSON
+            ServerConfig config = LoadServerConfig(configFile);
+
+            // Load password hash (hex) from file
+            byte[] passwordHash = LoadPasswordHash(passwordFile);
+
             try
             {
                 using TcpClient client = new TcpClient();
-                client.Connect(_serverIp, _serverPort);
+                await client.ConnectAsync(config.Adress, config.Port);
                 using NetworkStream stream = client.GetStream();
 
-                // Step 1: Send initial request
-                WriteString(stream, "AUTH");
+                Console.WriteLine("[CLIENT] Connected to server.");
 
-                // Step 2: Read challenge from server
-                string challenge = ReadString(stream);
+                var sender = $"DU:{Environment.UserDomainName}//{Environment.UserName}";
 
-                // Step 3: Compute response hash (passwordHash + challenge)
-                byte[] combined = CombineByteArrays(_passwordHash, Encoding.UTF8.GetBytes(challenge));
-                byte[] responseHash = ComputeSHA256(combined);
-                string responseHex = BitConverter.ToString(responseHash).Replace("-", "");
+                // Send initial request
+                await WriteStringAsync(stream, $"{sender}&/tci_uri*");
+                Console.WriteLine("[CLIENT] Initial request sent.");
 
-                // Step 4: Send response to server
-                WriteString(stream, responseHex);
+                // Receive challenge
+                string challenge = await ReadStringAsync(stream);
+                if (challenge == "TIMEOUT")
+                {
+                    Console.WriteLine("[CLIENT] Server says: TIMEOUT");
+                    return "!TIMEOUT";
+                }
 
-                // Step 5: Read server reply
-                string serverReply = ReadString(stream);
+                Console.WriteLine($"[CLIENT] Received challenge: {challenge}");
 
-                // Display server message in WebView2
-                Notification n = new Notification();
-                n.Up(NoticficationStyle.Info, serverReply, 10000);
+                // Combine password hash with challenge
+                byte[] finalHash = ComputeSHA256(CombineByteArrays(passwordHash, Encoding.UTF8.GetBytes(challenge)));
+
+                // Send final hash
+                await WriteStringAsync(stream, BitConverter.ToString(finalHash).Replace("-", ""));
+                Console.WriteLine("[CLIENT] Sent authentication hash.");
+
+                // Read result
+                string result = await ReadStringAsync(stream);
+                return result;
             }
+            
             catch (Exception ex)
             {
-                Notification n = new Notification();
-                n.Up(NoticficationStyle.Error, ex.Message);
+                return "!" + ex.Message;
             }
         }
 
-        // === Helper methods ===
-
-        private static void WriteString(NetworkStream stream, string message)
+        private static ServerConfig LoadServerConfig(string path)
         {
-            byte[] data = Encoding.UTF8.GetBytes(message + "\n");
-            stream.Write(data, 0, data.Length);
+            if (!File.Exists(path))
+                throw new FileNotFoundException($"Server config file not found: {path}");
+
+            string json = File.ReadAllText(path);
+            return JsonSerializer.Deserialize<ServerConfig>(json) ?? new ServerConfig();
         }
 
-        private static string ReadString(NetworkStream stream)
+        private static byte[] LoadPasswordHash(string path)
         {
-            StringBuilder sb = new();
-            int b;
-            while ((b = stream.ReadByte()) != -1)
-            {
-                if (b == '\n') break;
-                sb.Append((char)b);
-            }
-            return sb.ToString();
+            if (!File.Exists(path))
+                throw new FileNotFoundException($"Password file not found: {path}");
+
+            string hex = File.ReadAllText(path).Trim();
+            if (hex.Length % 2 != 0)
+                throw new InvalidDataException("Invalid hex in password file.");
+
+            byte[] bytes = new byte[hex.Length / 2];
+            for (int i = 0; i < bytes.Length; i++)
+                bytes[i] = Convert.ToByte(hex.Substring(i * 2, 2), 16);
+
+            return bytes;
         }
 
-        private static byte[] ComputeSHA256(byte[] inputBytes)
+        private static byte[] ComputeSHA256(byte[] input)
         {
             using var sha = SHA256.Create();
-            return sha.ComputeHash(inputBytes);
+            return sha.ComputeHash(input);
         }
 
         private static byte[] CombineByteArrays(byte[] a, byte[] b)
@@ -106,14 +109,43 @@ namespace adsl_Auto_Interaction_App
             return result;
         }
 
-        private static byte[] StringToByteArray(string hex)
+        private static async Task WriteStringAsync(NetworkStream stream, string message)
         {
-            int length = hex.Length;
-            byte[] data = new byte[length / 2];
-            for (int i = 0; i < length; i += 2)
-                data[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
-            return data;
+            byte[] data = Encoding.UTF8.GetBytes(message + "\n");
+            await stream.WriteAsync(data, 0, data.Length);
+        }
+
+        private static async Task<string> ReadStringAsync(NetworkStream stream)
+        {
+            StringBuilder sb = new();
+            byte[] buffer = new byte[1];
+
+            while (true)
+            {
+                int bytesRead = await stream.ReadAsync(buffer, 0, 1);
+                if (bytesRead == 0) break; // disconnected
+                if (buffer[0] == '\n') break;
+                sb.Append((char)buffer[0]);
+            }
+
+            return sb.ToString();
+        }
+
+        public static async Task SavePasswordAsHexAsync(string password)
+        {
+            if (string.IsNullOrEmpty(password))
+                throw new ArgumentException("Password cannot be empty.", nameof(password));
+
+            // Compute SHA-256 hash of the password
+            using var sha = SHA256.Create();
+            byte[] hashBytes = sha.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+            // Convert hash to hex string
+            string hex = BitConverter.ToString(hashBytes).Replace("-", "");
+
+            // Write to file asynchronously
+            await File.WriteAllTextAsync(passwordFile, hex);
+            Console.WriteLine($"Password hash saved to {passwordFile}");
         }
     }
 }
-*/

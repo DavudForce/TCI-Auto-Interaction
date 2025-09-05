@@ -1,5 +1,4 @@
 using Microsoft.VisualBasic.Devices;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Timer = System.Windows.Forms.Timer;
 
@@ -11,26 +10,15 @@ namespace adsl_Auto_Interaction_App
         Settings settingsForm;
         SettingsModule settings;
         Timer checkTimer;
-        int checkInterval = 6; // every 6 hours
+        int checkInterval = 6; // every n hours
         bool failFast = false;
         bool webNavigationCompelete = false;
         bool bootUp = true; // Indicates if the application still in "start up" mode
-
+        string recievedUri;
         ScheduleManager scheduleManager; // Manages 12h check schedule
 
         public Form1()
         {
-            /*
-            AgressiveNotification notification = new AgressiveNotification(false, 5000, "", "Something went wrong", "and we don't know what...", "But", "We will find it out", "and it won't be pleasant for you", "Consider this as a \"friendly\" warning", "", "Growth often hides in discomfort. A seed breaks apart before it becomes a tree, and so too must we shed outdated beliefs before new understanding takes root. Pain, though unwelcome, can sharpen clarity and teach compassion. Each setback is also a teacher, revealing the depth of our patience, the breadth of our courage, and the unshakable truth that we are capable of more than we once imagined.", "Resilience does not demand that we face everything alone. Human strength flourishes in connection: in the hands that reach out when we stumble, in the voices that remind us of hope when our own grows faint.", "To lean on others is not weakness but wisdom, for resilience is collective as much as individual.\r\n\r\nUltimately, growth is not measured by how fast we rise but by how deeply we root ourselves in the lessons learned along the way. To endure, to adapt, and to emerge renewed—this is the essence of resilience, and the quiet triumph of being fully alive.", "", "Now go ahead", "Use our application");
-            notification.Show();
-            notification.Focus();
-            notification.BringToFront();
-            notification.Activate();
-
-            Notification n = new Notification();
-            n.Up(NoticficationStyle.Info, "Gugunated gaga drinks now avalible!", 5000);
-            */
-
             InitializeComponent();
 
             settingsForm = new Settings(this);
@@ -52,14 +40,30 @@ namespace adsl_Auto_Interaction_App
 
         async void InitializeWebView()
         {
+            recievedUri = await ValidateConnection.RecieveUriAsync();
+
+            if (recievedUri.StartsWith('!'))
+            {
+                MessageBox.Show(recievedUri.Remove(0, 1), "Server is Down");
+                this.Close();
+            }
+
             await web.EnsureCoreWebView2Async();
-            web.CoreWebView2.Navigate("https://internet.tci.ir/panel");
+            web.CoreWebView2.Navigate(recievedUri);
         }
 
         void FillLoginForm(string usrName, string pass, string securityCode)
         {
-            web.ExecuteScriptAsync($"document.getElementsByName('username')[0].value = '{usrName}';");
-            web.ExecuteScriptAsync($"document.getElementsByName('password')[0].value = '{pass}';");
+            try
+            {
+                web.ExecuteScriptAsync($"document.getElementsByName('username')[0].value = '{usrName}';");
+                web.ExecuteScriptAsync($"document.getElementsByName('password')[0].value = '{pass}';");
+            }
+            catch
+            {
+                Notification n = new Notification();
+                n.Up(NotificationStyle.Error, "Autofill cannot be executed.", true, true);
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -91,12 +95,60 @@ namespace adsl_Auto_Interaction_App
 
         private async void btnRetrieveData_Click(object sender, EventArgs e)
         {
+            try
+            {
+                // Remove the extra quotes from JS result
+                var username = await web.ExecuteScriptAsync("document.getElementsByName('username')[0].value;");
+                username = username.Trim('"');
+
+                var pass = await web.ExecuteScriptAsync("document.getElementsByName('password')[0].value;");
+                pass = pass.Trim('"');
+
+                if (string.IsNullOrWhiteSpace(username) || username == "null" || string.IsNullOrWhiteSpace(pass) || pass == "null")
+                {
+                    Notification notify = new Notification();
+                    notify.Up(NotificationStyle.Warning, "Please login first to use the application", 7000, true);
+                    return;
+                }
+                // Simulate virtual click on hidden login button
+                await web.CoreWebView2.ExecuteScriptAsync(
+                    "document.querySelector('button[name=\"LoginFromWeb\"]').click();");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Could not press login button: " + ex.Message);
+            }
+
+            btnRetrieveData.Visible = false;
+
+            Notification n = new Notification();
+            n.Up(NotificationStyle.Info, "We'll handle the rest. you can monitor your stats in here (Dash board) or you can minimize this window and still get warning about your usage.", true, true);
+            n.Height = 150;
+
+        AfterButtonPress:
+
             await DoDataCheck();
 
             if (webNavigationCompelete)
                 // Schedule the automatic 12h data check
                 ScheduleNextCheck();
-            else MessageBox.Show("Please wait for the WebView to finish navigation");
+
+            else
+            {
+                goto AfterButtonPress;
+            }
+
+            while (splitContainer1.SplitterDistance >= 0)
+            {
+                try
+                {
+                    splitContainer1.SplitterDistance -= 20;
+                }
+                catch { } // Ignore errors
+                await Task.Delay(20);
+            }
+
+            splitContainer1.SplitterDistance = 0;
         }
 
         // Reusable method for scheduled or manual data checks
@@ -152,9 +204,9 @@ namespace adsl_Auto_Interaction_App
                 WarningManager.WarnIfNeeded.DailyDownloadLimitReached(currentDownload);
             if (currentUpload > 0)
                 WarningManager.WarnIfNeeded.DailyUploadLimitReached(currentUpload);
-            if(activeDaysRemaining > 0)
+            if (activeDaysRemaining > 0)
                 WarningManager.WarnIfNeeded.ActiveDaysRemaining(activeDaysRemaining);
-            if(timedDaysRemaining > 0)
+            if (timedDaysRemaining > 0)
                 WarningManager.WarnIfNeeded.TimedDaysRemaining(timedDaysRemaining);
             WarningManager.WarnIfNeeded.Percentages(activeDaysPercentage, activeTrafficPercentage, "Active");
             WarningManager.WarnIfNeeded.Percentages(timedDaysPercentage, timedTrafficPercentage, "Timed");
@@ -167,9 +219,9 @@ namespace adsl_Auto_Interaction_App
 
             var todayDownloaded = J2A(usageReport.Item2);
             var todayUploaded = J2A(usageReport.Item3);
-            if(todayDownloaded.Length > 2)
+            if (todayDownloaded.Length > 2)
                 txtDownloaded.Text = todayDownloaded[todayDownloaded.Length - 2].ToString(); // The TCI does not include "today"'s data, but instead it's last value is 0. so I actually getting "yesterday" 's value :)
-            if(todayUploaded.Length > 2)
+            if (todayUploaded.Length > 2)
                 txtUploaded.Text = todayUploaded[todayUploaded.Length - 2].ToString(); // ^^^ Same as above comment ^^^
 
             txtActiveServiceName.Text = activeServiceData.Item1;
@@ -265,19 +317,61 @@ namespace adsl_Auto_Interaction_App
                 {
                     Notification n = new Notification();
                     HideToTray();
-                    n.UpMost(NoticficationStyle.Info, "Application minimized to system tray. You can re-open it via duble clicking on the icon", 6000);
+                    n.Up(NotificationStyle.Info, "Form is hided in system tray. You can alway duble-click on the icon to open it. You still will recieve notifications", true, true);
                 }
             }
         }
 
-        private void web_NavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
+        private async void web_NavigationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationCompletedEventArgs e)
         {
             webNavigationCompelete = true;
+            if (!e.IsSuccess) return;
+
+            try
+            {
+                // Inject CSS/HTML to hide the login button visually and show gray text
+                string js = @"
+            (function() {
+                let btn = document.querySelector('button[name=""LoginFromWeb""]');
+                if (btn) {
+                    // Hide button but keep it functional
+                    btn.style.visibility = 'hidden';
+                    btn.style.position = 'absolute'; 
+                    btn.style.left = '-9999px'; // move offscreen
+
+                    // Add placeholder message if not already added
+                    if (!document.getElementById('customLoginMsg')) {
+                        let msg = document.createElement('div');
+                        msg.id = 'customLoginMsg';
+                        msg.textContent = 'Please press OK button in the bottom of this page';
+                        msg.style.color = 'gray';
+                        msg.style.textAlign = 'center';
+                        msg.style.padding = '10px';
+                        msg.style.fontSize = '14px';
+                        btn.parentNode.insertBefore(msg, btn);
+                    }
+                }
+            })();";
+                await web.CoreWebView2.ExecuteScriptAsync(js);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Injection failed: " + ex.Message);
+            }
         }
 
         private void web_NavigationStarting(object sender, Microsoft.Web.WebView2.Core.CoreWebView2NavigationStartingEventArgs e)
         {
             webNavigationCompelete = false;
+        }
+
+        private async void Form1_Shown(object sender, EventArgs e)
+        {
+            while (splitContainer1.SplitterDistance < this.Width - 20)
+            {
+                splitContainer1.SplitterDistance += 30;
+                await Task.Delay(20);
+            }
         }
     }
 }

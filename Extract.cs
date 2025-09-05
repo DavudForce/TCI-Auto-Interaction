@@ -64,7 +64,7 @@ namespace adsl_Auto_Interaction_App
             catch 
             {
                 Notification n = new Notification();
-                n.Up(NoticficationStyle.Warning, "Please wait for the page to load", 6000, true);
+                n.Up(NotificationStyle.Warning, "Please wait for the page to load", 6000, true);
                 return (-1 , -1, -1, -1);
             }
         }
@@ -84,7 +84,7 @@ namespace adsl_Auto_Interaction_App
             catch 
             {
                 Notification n = new Notification();
-                n.Up(NoticficationStyle.Warning, "Please wait for the page to load", 6000, true);
+                n.Up(NotificationStyle.Warning, "Please wait for the page to load", 6000, true);
                 return "null";
             }
         }
@@ -118,7 +118,7 @@ namespace adsl_Auto_Interaction_App
             catch 
             {
                 Notification n = new Notification();
-                n.Up(NoticficationStyle.Warning, "Please wait for the page to load", 6000, true);
+                n.Up(NotificationStyle.Warning, "Please wait for the page to load", 6000, true);
                 return ("null", "null", "null", "null", "null");
             }
 
@@ -153,7 +153,7 @@ namespace adsl_Auto_Interaction_App
             catch 
             {
                 Notification n = new Notification();
-                n.Up(NoticficationStyle.Warning, "Please wait for the page to load", 6000, true);
+                n.Up(NotificationStyle.Warning, "Please wait for the page to load", 6000, true);
                 return ("null", "null", "null", "null", "null");
             }
         }
@@ -179,7 +179,7 @@ namespace adsl_Auto_Interaction_App
             catch 
             {
                 Notification n = new Notification();
-                n.Up(NoticficationStyle.Warning, "Please wait for the page to load", 6000, true);
+                n.Up(NotificationStyle.Warning, "Please wait for the page to load", 6000, true);
                 return ("null", "null", "null");
             }
         }

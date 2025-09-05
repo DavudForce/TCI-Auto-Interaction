@@ -67,7 +67,6 @@
             label11 = new Label();
             label4 = new Label();
             btnOpenSettings = new Button();
-            btnRetrieveData = new Button();
             btnClearText = new Button();
             btnSend = new Button();
             txtPass = new TextBox();
@@ -76,6 +75,7 @@
             label3 = new Label();
             label2 = new Label();
             label1 = new Label();
+            btnRetrieveData = new Button();
             connectionCheckTimer = new System.Windows.Forms.Timer(components);
             trayIcon = new NotifyIcon(components);
             ((System.ComponentModel.ISupportInitialize)web).BeginInit();
@@ -98,7 +98,7 @@
             web.Dock = DockStyle.Fill;
             web.Location = new Point(0, 0);
             web.Name = "web";
-            web.Size = new Size(262, 423);
+            web.Size = new Size(25, 345);
             web.TabIndex = 0;
             web.ZoomFactor = 1D;
             web.NavigationStarting += web_NavigationStarting;
@@ -113,12 +113,12 @@
             // splitContainer1.Panel1
             // 
             splitContainer1.Panel1.Controls.Add(web);
+            splitContainer1.Panel1MinSize = 0;
             // 
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(panel1);
             splitContainer1.Panel2.Controls.Add(btnOpenSettings);
-            splitContainer1.Panel2.Controls.Add(btnRetrieveData);
             splitContainer1.Panel2.Controls.Add(btnClearText);
             splitContainer1.Panel2.Controls.Add(btnSend);
             splitContainer1.Panel2.Controls.Add(txtPass);
@@ -127,8 +127,9 @@
             splitContainer1.Panel2.Controls.Add(label3);
             splitContainer1.Panel2.Controls.Add(label2);
             splitContainer1.Panel2.Controls.Add(label1);
-            splitContainer1.Size = new Size(649, 423);
-            splitContainer1.SplitterDistance = 262;
+            splitContainer1.Panel2MinSize = 0;
+            splitContainer1.Size = new Size(719, 345);
+            splitContainer1.SplitterDistance = 25;
             splitContainer1.TabIndex = 1;
             // 
             // panel1
@@ -141,9 +142,9 @@
             panel1.Controls.Add(groupBox1);
             panel1.Controls.Add(label11);
             panel1.Controls.Add(label4);
-            panel1.Location = new Point(29, 176);
+            panel1.Location = new Point(29, 147);
             panel1.Name = "panel1";
-            panel1.Size = new Size(346, 235);
+            panel1.Size = new Size(680, 186);
             panel1.TabIndex = 3;
             // 
             // groupBox4
@@ -156,7 +157,7 @@
             groupBox4.Controls.Add(label21);
             groupBox4.Controls.Add(label20);
             groupBox4.Controls.Add(label16);
-            groupBox4.Location = new Point(5, 339);
+            groupBox4.Location = new Point(10, 152);
             groupBox4.Name = "groupBox4";
             groupBox4.Size = new Size(319, 99);
             groupBox4.TabIndex = 10;
@@ -243,9 +244,9 @@
             groupBox3.Controls.Add(label13);
             groupBox3.Controls.Add(label14);
             groupBox3.Controls.Add(label12);
-            groupBox3.Location = new Point(5, 257);
+            groupBox3.Location = new Point(341, 152);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(319, 76);
+            groupBox3.Size = new Size(313, 76);
             groupBox3.TabIndex = 9;
             groupBox3.TabStop = false;
             groupBox3.Text = "Details";
@@ -319,7 +320,7 @@
             groupBox2.Controls.Add(txtTimedServiceName);
             groupBox2.Controls.Add(label10);
             groupBox2.ForeColor = SystemColors.GrayText;
-            groupBox2.Location = new Point(5, 147);
+            groupBox2.Location = new Point(335, 37);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(319, 104);
             groupBox2.TabIndex = 6;
@@ -389,7 +390,7 @@
             groupBox1.Controls.Add(label6);
             groupBox1.Controls.Add(label7);
             groupBox1.ForeColor = SystemColors.GrayText;
-            groupBox1.Location = new Point(5, 37);
+            groupBox1.Location = new Point(10, 37);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(319, 104);
             groupBox1.TabIndex = 7;
@@ -478,16 +479,6 @@
             btnOpenSettings.UseVisualStyleBackColor = true;
             btnOpenSettings.Click += btnOpenSettings_Click;
             // 
-            // btnRetrieveData
-            // 
-            btnRetrieveData.Location = new Point(202, 147);
-            btnRetrieveData.Name = "btnRetrieveData";
-            btnRetrieveData.Size = new Size(156, 23);
-            btnRetrieveData.TabIndex = 2;
-            btnRetrieveData.Text = "Retrieve Data";
-            btnRetrieveData.UseVisualStyleBackColor = true;
-            btnRetrieveData.Click += btnRetrieveData_Click;
-            // 
             // btnClearText
             // 
             btnClearText.Location = new Point(202, 118);
@@ -559,6 +550,17 @@
             label1.TabIndex = 0;
             label1.Text = "Connected: ";
             // 
+            // btnRetrieveData
+            // 
+            btnRetrieveData.Dock = DockStyle.Bottom;
+            btnRetrieveData.Location = new Point(0, 345);
+            btnRetrieveData.Name = "btnRetrieveData";
+            btnRetrieveData.Size = new Size(719, 23);
+            btnRetrieveData.TabIndex = 2;
+            btnRetrieveData.Text = "OK";
+            btnRetrieveData.UseVisualStyleBackColor = true;
+            btnRetrieveData.Click += btnRetrieveData_Click;
+            // 
             // connectionCheckTimer
             // 
             connectionCheckTimer.Interval = 10000;
@@ -574,15 +576,17 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(649, 423);
+            ClientSize = new Size(719, 368);
             Controls.Add(splitContainer1);
-            MinimumSize = new Size(665, 462);
+            Controls.Add(btnRetrieveData);
+            MinimumSize = new Size(735, 407);
             Name = "Form1";
             ShowIcon = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Main";
             FormClosing += Form1_FormClosing;
             Load += Form1_Load;
+            Shown += Form1_Shown;
             Resize += Form1_Resize;
             ((System.ComponentModel.ISupportInitialize)web).EndInit();
             splitContainer1.Panel1.ResumeLayout(false);

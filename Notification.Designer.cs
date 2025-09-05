@@ -93,13 +93,15 @@
             // 
             // lblDescription
             // 
+            lblDescription.AutoSize = true;
             lblDescription.Dock = DockStyle.Fill;
             lblDescription.Font = new Font("Segoe UI", 10F);
             lblDescription.Location = new Point(0, 0);
+            lblDescription.MaximumSize = new Size(250, 64);
             lblDescription.Name = "lblDescription";
-            lblDescription.Size = new Size(249, 64);
+            lblDescription.Size = new Size(239, 64);
             lblDescription.TabIndex = 0;
-            lblDescription.Text = "Descriptioanous";
+            lblDescription.Text = "Descriptioanous very really long text that I wrote and is very and very and so ver y long that it's so long and we like it because we like ling things especially if they are narrow";
             // 
             // pnlType
             // 
@@ -156,6 +158,7 @@
             ((System.ComponentModel.ISupportInitialize)pctrIcon).EndInit();
             pnlText.ResumeLayout(false);
             pnlDescription.ResumeLayout(false);
+            pnlDescription.PerformLayout();
             pnlType.ResumeLayout(false);
             pnlType.PerformLayout();
             ResumeLayout(false);

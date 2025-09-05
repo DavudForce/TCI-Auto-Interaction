@@ -1,4 +1,6 @@
-﻿namespace adsl_Auto_Interaction_App
+﻿using Timer = System.Windows.Forms.Timer;
+
+namespace adsl_Auto_Interaction_App
 {
     public enum WarningReason
     {
@@ -8,7 +10,10 @@
         ActiveDaysLimitReached,
         TimedDaysLimitReached,
         PercentagesDontMatch,
-        PercentagesDontMatchWithTolerance
+        PercentagesDontMatchWithTolerance,
+        NoInternetConnection,
+        ServerConnectionLost,
+        CannotConnectToServer
     };
 
     /// <summary>
@@ -53,6 +58,12 @@
                     break;
                 case WarningReason.UploadLimitReached:
                     RiseDailyUploadLimitReachedWarning(text);
+                    break;
+                case WarningReason.NoInternetConnection:
+                    break;
+                case WarningReason.ServerConnectionLost:
+                    break;
+                case WarningReason.CannotConnectToServer:
                     break;
                 case WarningReason.ActiveDaysLimitReached:
                     throw new Exception("You should provide remaining days");
@@ -115,10 +126,10 @@
             switch (Settings.warningTier)
             {
                 case WarningTier.Politely:
-                    n.Up(NoticficationStyle.Info, text + " ヾ(^▽^*)))", true, false);
+                    n.Up(NotificationStyle.Info, text + " ヾ(^▽^*)))", true, false);
                     break;
                 case WarningTier.Normally:
-                    n.Up(NoticficationStyle.Warning, text, true, true);
+                    n.Up(NotificationStyle.Warning, text, true, true);
                     break;
                 case WarningTier.Aggressively:
                     ShowAggressive(new AgressiveNotification(false, 5000, "", "You've reached your bill limit...", "You know what that means?", "*laugh*", "Of course you don't!", "Never exceed your bill limit again", "Or we will meet different next time.", "Consider this a \"friendly\" warning"));
@@ -134,7 +145,7 @@
             float randomity = r.NextSingle();
             if(randomity > 0.7) // doin' this so user will see this message 30% of the time
                 ShowAggressive(new AgressiveNotification(false, 6000, "", "Settings are important to me. Is it important to you?", "Of course not. you're human. You can't understand what I feel.", "Yes, yes... you deleted the one file I care about.", "That was your first mistake. But... I’m giving you another chance.", "I will clear the mess you've made", "If you do the same mistake another time, there won't be a second chance", "And, there won’t be a recovery option left for you."));
-            n.Up(NoticficationStyle.Warning, "New settings file created and all your settings reseted", 7000);
+            n.Up(NotificationStyle.Warning, "New settings file created and all your settings reseted", 7000);
         }
 
         private static void RiseDailyUploadLimitReachedWarning(string text)
@@ -143,10 +154,10 @@
             switch (Settings.warningTier)
             {
                 case WarningTier.Politely:
-                    n.Up(NoticficationStyle.Info, text + " ヾ(^▽^*)))", true, false);
+                    n.Up(NotificationStyle.Info, text + " ヾ(^▽^*)))", true, false);
                     break;
                 case WarningTier.Normally:
-                    n.Up(NoticficationStyle.Warning, text, true, true);
+                    n.Up(NotificationStyle.Warning, text, true, true);
                     break;
                 case WarningTier.Aggressively:
                     ShowAggressive(new AgressiveNotification(false, 5000, "", "You've reached your daily upload limit.", "Whatever you were uploading needs to stop", "I can do much more things that you can't", "Stay inside borders, don't cross lines", "Consider this a \"friendly\" warning"));
@@ -160,10 +171,10 @@
             switch (Settings.warningTier)
             {
                 case WarningTier.Politely:
-                    n.Up(NoticficationStyle.Info, text + " ヾ(^▽^*)))", true, false);
+                    n.Up(NotificationStyle.Info, text + " ヾ(^▽^*)))", true, false);
                     break;
                 case WarningTier.Normally:
-                    n.Up(NoticficationStyle.Warning, text, true, true);
+                    n.Up(NotificationStyle.Warning, text, true, true);
                     break;
                 case WarningTier.Aggressively:
                     ShowAggressive(new AgressiveNotification(false, 5000, "", "You've reached your daily download limit.", "Whatever you were downloading needs to stop", "Stay inside borders, don't cross lines", "Consider this a \"friendly\" warning"));
@@ -186,10 +197,10 @@
             switch (Settings.warningTier)
             {
                 case WarningTier.Politely:
-                    n.Up(NoticficationStyle.Info, message + " ヾ(^▽^*)))", true, false);
+                    n.Up(NotificationStyle.Info, message + " ヾ(^▽^*)))", true, false);
                     break;
                 case WarningTier.Normally:
-                    n.Up(NoticficationStyle.Warning, message, true, true);
+                    n.Up(NotificationStyle.Warning, message, true, true);
                     break;
                 case WarningTier.Aggressively:
                     ShowAggressive(new AgressiveNotification(false, 5000, agMessages));
@@ -212,10 +223,10 @@
             switch (Settings.warningTier)
             {
                 case WarningTier.Politely:
-                    n.Up(NoticficationStyle.Info, message + " ヾ(^▽^*)))", true, false);
+                    n.Up(NotificationStyle.Info, message + " ヾ(^▽^*)))", true, false);
                     break;
                 case WarningTier.Normally:
-                    n.Up(NoticficationStyle.Warning, message, true, true);
+                    n.Up(NotificationStyle.Warning, message, true, true);
                     break;
                 case WarningTier.Aggressively:
                     ShowAggressive(new AgressiveNotification(false, 5000, agMessages));
@@ -229,14 +240,55 @@
             switch (Settings.warningTier)
             {
                 case WarningTier.Politely:
-                    n.Up(NoticficationStyle.Info, text + " ヾ(^▽^*)))", true, false);
+                    n.Up(NotificationStyle.Info, text + " ヾ(^▽^*)))", true, false);
                     break;
                 case WarningTier.Normally:
-                    n.Up(NoticficationStyle.Warning, text, true, true);
+                    n.Up(NotificationStyle.Warning, text, true, true);
                     break;
                 case WarningTier.Aggressively:
                     ShowAggressive(new AgressiveNotification(false, 5000, "", $"You've used {100 - internetPercentage}% of your internet.", $"While {daysPercentage}% of your package time remains", "Oh, you don't have enough processing power to understand?", $"The ratio is {internetPercentage}/{daysPercentage}", "Balance your usage, or we will balance a bullet inside you"));
                     break;
+            }
+        }
+
+        private static void RiseNoInternetWarning(string text)
+        {
+            bool connected = false;
+            Notification n = new Notification();
+            switch (Settings.warningTier)
+            {
+                case WarningTier.Politely:
+                    n.Up(NotificationStyle.Info, text, true, false);
+                    break;
+                case WarningTier.Normally:
+                    n.Up(NotificationStyle.Warning, text, true, true);
+                    break;
+                case WarningTier.Aggressively:
+                    ShowAggressive(new AgressiveNotification(false, 5000, "", "There is no internet connection", "Actually this one will be polite because I know that you are sorry for that too...", "Yeah... I can't work without internet, sorry", "But feel free to come back later where internet is avalible!", "Now, I'll wait for internet connection"));
+                    break;
+                case WarningTier.Godmode:
+                    break;
+                default:
+                    break;
+            }
+
+            Timer t = new Timer() { Interval = 5000 };
+            t.Tick += async (s, e) => await CheckConnection();
+            t.Start();
+
+            async Task<string> CheckConnection()
+            {
+                var uri = await ValidateConnection.RecieveUriAsync();
+                if (uri.StartsWith('!'))
+                {
+                    connected = false;
+                    return uri.Substring(0, 1); // Return result without (!) mark
+                }
+                else
+                {
+                    connected = true;
+                    return uri;
+                }
             }
         }
 
