@@ -8,7 +8,7 @@
 - [Settings overview](#settings-overview)
 - [Release notes](#release-notes)
 - [Screenshots](#screenshots)
-- [Common issues & FAQ](#common-issues-&-faq)
+- [Common issues & FAQ](#common-issues--faq)
 - [Contact us](#contact-us)
 
 ## Introducing
