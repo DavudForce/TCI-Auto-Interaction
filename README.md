@@ -108,5 +108,7 @@ Contact information is place in the end of this file.
 
 **Sometimes it shows a message box saying that settings file is missing**: This is because the file that the Application is storing it's settings on is missing or re-named. But another common cause it that the application has not access to that directory. In those cases, you can eather run the application as administrator, or you can allow it in your prefered defender application. If the file is missing or re-named, you can press "Yes" button on the message box to create a new Settings file with default values. After restoring, your settings will be reseted and you may need to manually re-valuate them. This issue is usually harmless.
 
+**When I open the program, in the navigation section, it says that I can't reach the site**: This issue is usually because of your internet connection quality. However, sometimes using a VPN can cause this problem too. Try disconnecting from VPN and trying again.
+
 ## Contact us
 If you having any other issue, please contact us via this E-Mail: keypumbs.team@gmail.com
