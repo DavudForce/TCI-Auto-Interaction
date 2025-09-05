@@ -47,6 +47,7 @@ Plseae note that tutorial with images located [here](#screenshots)
 
 - Open the application.
 - Log in with your TCI account details.
+    - Please click on the CAPTCHA image to get another CAPTCHA image after you fill all the required fields and solve the CAPTCHA. if any error       ocurres (such as invalid username/password or CAPTCHA) during login, you may need to manually re-start the application.
     - Please pay attention to **do not** press enter key during this procces. If enter key is pressed, you may need to close and re-open the application.
 - Press "OK" button on the bottom of the application.
 - After that you can see the button's text is now changed into "Retrieve Data". You can press it **after initialization** to manually extract data
