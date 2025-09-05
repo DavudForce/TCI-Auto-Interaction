@@ -12,8 +12,16 @@ Currently, the process requires the user to log in at startup and wait for about
 - Customizable warning styles in settings
 
 ## How to download
+1) Use the already compiled executable:
+- Download the lastest release from GitHub Releases.
+- Goto https://sendgb.com/cmMQUeBVbw1 and enter the password. Two files should be downloaded.
+- Copy the "server" folder (inside the downloaded folder) into the same directory that the executable located in.
+- Make sure you have .NET8 (or later) Runtime installed.
+- Run the application.
+  
+2) Use the source code:
 - Download the source code from GitHub Releases.
-- Goto https://sendgb.com/cmMQUeBVbw1 and enter the password. Two files should be downloaded in one file.
+- Goto https://sendgb.com/cmMQUeBVbw1 and enter the password. Two files should be downloaded.
 - Copy the "server" folder (inside the downloaded folder) into the same directory that the executable located in.
 - Make sure you have .NET8 (or later) Runtime installed.
 - Make sure you have `WebView2` NuGet package installed (if not, paste and run this code in your Package Manager Console: `Install-Package Microsoft.Web.WebView2`)
