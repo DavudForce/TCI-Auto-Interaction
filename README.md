@@ -1,5 +1,17 @@
 # TCI Auto-Interaction
 
+## Table of contents
+- [Introducing](#introducing)
+- [Features](#features)
+- [How to download](#how-to-download)
+- [How to use](#how-to-use)
+- [Settings overview](#settings-overview)
+- [Release notes](#release-notes)
+- [Screenshots](#screenshots)
+- [Common issues & FAQ](#common-issues-&-faq)
+- [Contact us](#contact-us)
+
+## Introducing
 TCI Auto-Interaction is a practical tool designed to help users monitor their TCI (Telecommunication Company of Iran) account efficiently. The application connects to the TCI website and extracts key data, alerting you if any monitored values exceed the limits you’ve set in the settings.
 
 Currently, the process requires the user to log in at startup and wait for about 30 seconds for the system to initialize. After that, the application automatically fetches data at the intervals specified in your settings, ensuring timely notifications without further manual steps.
