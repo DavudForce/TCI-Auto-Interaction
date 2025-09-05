@@ -246,7 +246,7 @@ namespace adsl_Auto_Interaction_App
                     n.Up(NotificationStyle.Warning, text, true, true);
                     break;
                 case WarningTier.Aggressively:
-                    ShowAggressive(new AgressiveNotification(false, 5000, "", $"You've used {100 - internetPercentage}% of your internet.", $"While {daysPercentage}% of your package time remains", "Oh, you don't have enough processing power to understand?", $"The ratio is {internetPercentage}/{daysPercentage}", "Balance your usage, or we will balance a bullet inside you"));
+                    ShowAggressive(new AgressiveNotification(false, 5000, "", $"You've used {100 - internetPercentage}% of your internet.", $"While you used {100 - daysPercentage}% of your package time", "Oh, you don't have enough processing power to understand?", $"The ratio is {internetPercentage}/{daysPercentage}", $"This means you are {Math.Abs(internetPercentage - daysPercentage)}% off-balance", "Balance your usage, or we will balance a bullet inside you"));
                     break;
             }
         }

@@ -13,6 +13,7 @@ namespace adsl_Auto_Interaction_App
         int checkInterval = 6; // every n hours
         bool failFast = false;
         bool webNavigationCompelete = false;
+        bool logedIn = false;
         bool bootUp = true; // Indicates if the application still in "start up" mode
         string recievedUri;
         ScheduleManager scheduleManager; // Manages 12h check schedule
@@ -44,6 +45,14 @@ namespace adsl_Auto_Interaction_App
 
             if (recievedUri.StartsWith('!'))
             {
+                if(recievedUri.ToLower().Remove(0,1) == "timeout")
+                {
+                    var res = MessageBox.Show("Server timedout. Please check your connection quality and press \"Retry\" button to retry or press \"Cancel\" button to cancel the action and close the app", "Timeout reached", MessageBoxButtons.RetryCancel);
+                    if (res == DialogResult.Retry)
+                        InitializeWebView();
+                    else
+                        this.Close();
+                }
                 MessageBox.Show(recievedUri.Remove(0, 1), "Server is Down");
                 this.Close();
             }
@@ -95,37 +104,52 @@ namespace adsl_Auto_Interaction_App
 
         private async void btnRetrieveData_Click(object sender, EventArgs e)
         {
-            try
+            if (!logedIn)
             {
-                // Remove the extra quotes from JS result
-                var username = await web.ExecuteScriptAsync("document.getElementsByName('username')[0].value;");
-                username = username.Trim('"');
-
-                var pass = await web.ExecuteScriptAsync("document.getElementsByName('password')[0].value;");
-                pass = pass.Trim('"');
-
-                if (string.IsNullOrWhiteSpace(username) || username == "null" || string.IsNullOrWhiteSpace(pass) || pass == "null")
+                try
                 {
-                    Notification notify = new Notification();
-                    notify.Up(NotificationStyle.Warning, "Please login first to use the application", 7000, true);
-                    return;
+                    // Remove the extra quotes from JS result
+                    var username = await web.ExecuteScriptAsync("document.getElementsByName('username')[0].value;");
+                    username = username.Trim('"');
+
+                    var pass = await web.ExecuteScriptAsync("document.getElementsByName('password')[0].value;");
+                    pass = pass.Trim('"');
+
+                    if (string.IsNullOrWhiteSpace(username) || username == "null" || string.IsNullOrWhiteSpace(pass) || pass == "null")
+                    {
+                        Notification notify = new Notification();
+                        notify.Up(NotificationStyle.Warning, "Please login first to use the application", 7000, true);
+                        return;
+                    }
+                    // Simulate virtual click on hidden login button
+                    await web.CoreWebView2.ExecuteScriptAsync(
+                        "document.querySelector('button[name=\"LoginFromWeb\"]').click();");
                 }
-                // Simulate virtual click on hidden login button
-                await web.CoreWebView2.ExecuteScriptAsync(
-                    "document.querySelector('button[name=\"LoginFromWeb\"]').click();");
+                catch (Exception exc)
+                {
+                    MessageBox.Show("Could not press login button: " + exc.Message);
+                }
+
+                btnRetrieveData.Visible = true;
+                btnRetrieveData.Text = "Retrieve Data";
+
+                Notification n = new Notification();
+                n.Up(NotificationStyle.Info, "Application started and it will take a moment to initialize. You will be notified when app is initialized. The window must remain visible during initialization (but it can be minimized)", true, true);
+                n.SetSize(new Size(n.Width, n.Height + 40));
+                
+                await Task.Delay(30000); // Wait for the site to load
+
+                logedIn = true;
+
+                if (!n.IsDisposed)
+                {
+                    n.Down();
+                    n.Dispose();
+                }
+                Notification n2 = new Notification();
+                n2.Up(NotificationStyle.Info, "Application started!", true, true);
+                n2.SetSize();
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Could not press login button: " + ex.Message);
-            }
-
-            btnRetrieveData.Visible = false;
-
-            Notification n = new Notification();
-            n.Up(NotificationStyle.Info, "We'll handle the rest. you can monitor your stats in here (Dash board) or you can minimize this window and still get warning about your usage.", true, true);
-            n.Height = 150;
-
-        AfterButtonPress:
 
             await DoDataCheck();
 
@@ -133,22 +157,11 @@ namespace adsl_Auto_Interaction_App
                 // Schedule the automatic 12h data check
                 ScheduleNextCheck();
 
-            else
-            {
-                goto AfterButtonPress;
-            }
-
-            while (splitContainer1.SplitterDistance >= 0)
-            {
-                try
-                {
-                    splitContainer1.SplitterDistance -= 20;
-                }
-                catch { } // Ignore errors
-                await Task.Delay(20);
-            }
-
-            splitContainer1.SplitterDistance = 0;
+            //litContainer1.SplitterDistance = 0;
+            
+            splitContainer1.Panel2Collapsed = false; // Don't ask me why\\\\--|])}
+            splitContainer1.Panel1Collapsed = true; // Don't ask me why ////--|])}
+            
         }
 
         // Reusable method for scheduled or manual data checks
@@ -313,11 +326,11 @@ namespace adsl_Auto_Interaction_App
         {
             if (this.WindowState == FormWindowState.Minimized)
             {
-                if (settings.MinimizeToSystemTray)
+                if (settings.MinimizeToSystemTray && logedIn)
                 {
                     Notification n = new Notification();
                     HideToTray();
-                    n.Up(NotificationStyle.Info, "Form is hided in system tray. You can alway duble-click on the icon to open it. You still will recieve notifications", true, true);
+                    n.Up(NotificationStyle.Info, "Form is hided in system tray. You can alway duble-click on the icon to open it. You will still recieve notifications", true, true);
                 }
             }
         }
@@ -331,27 +344,26 @@ namespace adsl_Auto_Interaction_App
             {
                 // Inject CSS/HTML to hide the login button visually and show gray text
                 string js = @"
-            (function() {
-                let btn = document.querySelector('button[name=""LoginFromWeb""]');
-                if (btn) {
-                    // Hide button but keep it functional
-                    btn.style.visibility = 'hidden';
-                    btn.style.position = 'absolute'; 
-                    btn.style.left = '-9999px'; // move offscreen
+                (function() {
+                    let btn = document.querySelector('button[name=""LoginFromWeb""]');
+                    if (btn) {
+                        // Hide button but keep functional
+                        btn.style.visibility = 'hidden';
+                        btn.style.position = 'absolute';
+                        btn.style.left = '-9999px';
 
-                    // Add placeholder message if not already added
-                    if (!document.getElementById('customLoginMsg')) {
-                        let msg = document.createElement('div');
-                        msg.id = 'customLoginMsg';
-                        msg.textContent = 'Please press OK button in the bottom of this page';
-                        msg.style.color = 'gray';
-                        msg.style.textAlign = 'center';
-                        msg.style.padding = '10px';
-                        msg.style.fontSize = '14px';
-                        btn.parentNode.insertBefore(msg, btn);
+                        if (!document.getElementById('customLoginMsg')) {
+                            let msg = document.createElement('div');
+                            msg.id = 'customLoginMsg';
+                            msg.textContent = 'Please press OK button in the bottom of this application';
+                            msg.style.color = 'gray';
+                            msg.style.textAlign = 'center';
+                            msg.style.padding = '10px';
+                            msg.style.fontSize = '14px';
+                            btn.parentNode.insertBefore(msg, btn);
+                        }
                     }
-                }
-            })();";
+                })();";
                 await web.CoreWebView2.ExecuteScriptAsync(js);
             }
             catch (Exception ex)
@@ -365,13 +377,15 @@ namespace adsl_Auto_Interaction_App
             webNavigationCompelete = false;
         }
 
-        private async void Form1_Shown(object sender, EventArgs e)
+        private void Form1_Shown(object sender, EventArgs e)
         {
-            while (splitContainer1.SplitterDistance < this.Width - 20)
-            {
-                splitContainer1.SplitterDistance += 30;
-                await Task.Delay(20);
-            }
+           // splitContainer1.SplitterDistance = this.Width - 20;
+            splitContainer1.Panel2Collapsed = true;
+        }
+
+        private void groupBox5_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

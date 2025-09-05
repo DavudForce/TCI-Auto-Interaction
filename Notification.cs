@@ -28,6 +28,8 @@ namespace adsl_Auto_Interaction_App
 
         int _closeDelay = 5000;
 
+        Size _defaultSize;
+
         Timer _closeTimer = new Timer();
 
         // fade timers
@@ -49,6 +51,8 @@ namespace adsl_Auto_Interaction_App
 
             this.Opacity = 0; // start invisible
             pctrIcon.SizeMode = PictureBoxSizeMode.Zoom;
+
+            _defaultSize = this.Size;
         }
 
         private void OnDescriptionChanged()
@@ -162,6 +166,25 @@ namespace adsl_Auto_Interaction_App
 
             if (playSound)
                 PlaySound(style);
+        }
+
+        /// <summary>
+        /// Resizes notification to specified size
+        /// </summary>
+        /// <param name="newSize">New size</param>
+        public void SetSize(Size newSize)
+        {
+            this.Size = newSize;
+            PlaceLowerRight();
+        }
+        
+        /// <summary>
+        /// Resizes notification to it's default size
+        /// </summary>
+        public void SetSize()
+        {
+            this.Size = _defaultSize;
+            PlaceLowerRight();
         }
 
         private void PlaySound(NotificationStyle style)

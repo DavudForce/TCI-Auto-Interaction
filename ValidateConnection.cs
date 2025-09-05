@@ -44,11 +44,6 @@ namespace adsl_Auto_Interaction_App
 
                 // Receive challenge
                 string challenge = await ReadStringAsync(stream);
-                if (challenge == "TIMEOUT")
-                {
-                    Console.WriteLine("[CLIENT] Server says: TIMEOUT");
-                    return "!TIMEOUT";
-                }
 
                 Console.WriteLine($"[CLIENT] Received challenge: {challenge}");
 
@@ -61,6 +56,11 @@ namespace adsl_Auto_Interaction_App
 
                 // Read result
                 string result = await ReadStringAsync(stream);
+                if (result == "TIMEOUT")
+                {
+                    Console.WriteLine("[CLIENT] Server says: TIMEOUT");
+                    return "!TIMEOUT";
+                }
                 return result;
             }
             

@@ -32,6 +32,13 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             web = new Microsoft.Web.WebView2.WinForms.WebView2();
             splitContainer1 = new SplitContainer();
+            groupBox5 = new GroupBox();
+            txtUsername = new TextBox();
+            label2 = new Label();
+            label3 = new Label();
+            txtPass = new TextBox();
+            btnClearText = new Button();
+            btnSend = new Button();
             panel1 = new Panel();
             groupBox4 = new GroupBox();
             label17 = new Label();
@@ -67,13 +74,7 @@
             label11 = new Label();
             label4 = new Label();
             btnOpenSettings = new Button();
-            btnClearText = new Button();
-            btnSend = new Button();
-            txtPass = new TextBox();
-            txtUsername = new TextBox();
             txtConnectionState = new Label();
-            label3 = new Label();
-            label2 = new Label();
             label1 = new Label();
             btnRetrieveData = new Button();
             connectionCheckTimer = new System.Windows.Forms.Timer(components);
@@ -83,6 +84,7 @@
             splitContainer1.Panel1.SuspendLayout();
             splitContainer1.Panel2.SuspendLayout();
             splitContainer1.SuspendLayout();
+            groupBox5.SuspendLayout();
             panel1.SuspendLayout();
             groupBox4.SuspendLayout();
             groupBox3.SuspendLayout();
@@ -98,7 +100,7 @@
             web.Dock = DockStyle.Fill;
             web.Location = new Point(0, 0);
             web.Name = "web";
-            web.Size = new Size(25, 345);
+            web.Size = new Size(151, 330);
             web.TabIndex = 0;
             web.ZoomFactor = 1D;
             web.NavigationStarting += web_NavigationStarting;
@@ -117,24 +119,89 @@
             // 
             // splitContainer1.Panel2
             // 
+            splitContainer1.Panel2.Controls.Add(groupBox5);
             splitContainer1.Panel2.Controls.Add(panel1);
             splitContainer1.Panel2.Controls.Add(btnOpenSettings);
-            splitContainer1.Panel2.Controls.Add(btnClearText);
-            splitContainer1.Panel2.Controls.Add(btnSend);
-            splitContainer1.Panel2.Controls.Add(txtPass);
-            splitContainer1.Panel2.Controls.Add(txtUsername);
             splitContainer1.Panel2.Controls.Add(txtConnectionState);
-            splitContainer1.Panel2.Controls.Add(label3);
-            splitContainer1.Panel2.Controls.Add(label2);
             splitContainer1.Panel2.Controls.Add(label1);
             splitContainer1.Panel2MinSize = 0;
-            splitContainer1.Size = new Size(719, 345);
-            splitContainer1.SplitterDistance = 25;
+            splitContainer1.Size = new Size(719, 330);
+            splitContainer1.SplitterDistance = 151;
             splitContainer1.TabIndex = 1;
+            // 
+            // groupBox5
+            // 
+            groupBox5.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            groupBox5.Controls.Add(txtUsername);
+            groupBox5.Controls.Add(label2);
+            groupBox5.Controls.Add(label3);
+            groupBox5.Controls.Add(txtPass);
+            groupBox5.Controls.Add(btnClearText);
+            groupBox5.Controls.Add(btnSend);
+            groupBox5.Enabled = false;
+            groupBox5.Location = new Point(209, 12);
+            groupBox5.Name = "groupBox5";
+            groupBox5.Size = new Size(339, 127);
+            groupBox5.TabIndex = 4;
+            groupBox5.TabStop = false;
+            groupBox5.Text = "Login";
+            groupBox5.Enter += groupBox5_Enter;
+            // 
+            // txtUsername
+            // 
+            txtUsername.Location = new Point(76, 37);
+            txtUsername.Name = "txtUsername";
+            txtUsername.Size = new Size(257, 23);
+            txtUsername.TabIndex = 1;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(4, 40);
+            label2.Name = "label2";
+            label2.Size = new Size(66, 15);
+            label2.TabIndex = 0;
+            label2.Text = "User name:";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(4, 69);
+            label3.Name = "label3";
+            label3.Size = new Size(60, 15);
+            label3.TabIndex = 0;
+            label3.Text = "Password:";
+            // 
+            // txtPass
+            // 
+            txtPass.Location = new Point(76, 66);
+            txtPass.Name = "txtPass";
+            txtPass.Size = new Size(257, 23);
+            txtPass.TabIndex = 1;
+            // 
+            // btnClearText
+            // 
+            btnClearText.Location = new Point(177, 95);
+            btnClearText.Name = "btnClearText";
+            btnClearText.Size = new Size(75, 23);
+            btnClearText.TabIndex = 2;
+            btnClearText.Text = "Clear";
+            btnClearText.UseVisualStyleBackColor = true;
+            // 
+            // btnSend
+            // 
+            btnSend.Location = new Point(258, 95);
+            btnSend.Name = "btnSend";
+            btnSend.Size = new Size(75, 23);
+            btnSend.TabIndex = 2;
+            btnSend.Text = "Submit";
+            btnSend.UseVisualStyleBackColor = true;
+            btnSend.Click += btnSend_Click;
             // 
             // panel1
             // 
             panel1.AutoScroll = true;
+            panel1.BorderStyle = BorderStyle.FixedSingle;
             panel1.Controls.Add(groupBox4);
             panel1.Controls.Add(groupBox3);
             panel1.Controls.Add(txtBilling);
@@ -142,9 +209,11 @@
             panel1.Controls.Add(groupBox1);
             panel1.Controls.Add(label11);
             panel1.Controls.Add(label4);
-            panel1.Location = new Point(29, 147);
+            panel1.Dock = DockStyle.Bottom;
+            panel1.Location = new Point(0, 145);
+            panel1.Margin = new Padding(0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(680, 186);
+            panel1.Size = new Size(564, 185);
             panel1.TabIndex = 3;
             // 
             // groupBox4
@@ -479,41 +548,6 @@
             btnOpenSettings.UseVisualStyleBackColor = true;
             btnOpenSettings.Click += btnOpenSettings_Click;
             // 
-            // btnClearText
-            // 
-            btnClearText.Location = new Point(202, 118);
-            btnClearText.Name = "btnClearText";
-            btnClearText.Size = new Size(75, 23);
-            btnClearText.TabIndex = 2;
-            btnClearText.Text = "Clear";
-            btnClearText.UseVisualStyleBackColor = true;
-            // 
-            // btnSend
-            // 
-            btnSend.Location = new Point(283, 118);
-            btnSend.Name = "btnSend";
-            btnSend.Size = new Size(75, 23);
-            btnSend.TabIndex = 2;
-            btnSend.Text = "Submit";
-            btnSend.UseVisualStyleBackColor = true;
-            btnSend.Click += btnSend_Click;
-            // 
-            // txtPass
-            // 
-            txtPass.Location = new Point(101, 89);
-            txtPass.Name = "txtPass";
-            txtPass.Size = new Size(257, 23);
-            txtPass.TabIndex = 1;
-            txtPass.Text = "92747253";
-            // 
-            // txtUsername
-            // 
-            txtUsername.Location = new Point(101, 60);
-            txtUsername.Name = "txtUsername";
-            txtUsername.Size = new Size(257, 23);
-            txtUsername.TabIndex = 1;
-            txtUsername.Text = "4134792252 ";
-            // 
             // txtConnectionState
             // 
             txtConnectionState.AutoSize = true;
@@ -522,24 +556,6 @@
             txtConnectionState.Size = new Size(31, 15);
             txtConnectionState.TabIndex = 0;
             txtConnectionState.Text = "false";
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(29, 92);
-            label3.Name = "label3";
-            label3.Size = new Size(60, 15);
-            label3.TabIndex = 0;
-            label3.Text = "Password:";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(29, 63);
-            label2.Name = "label2";
-            label2.Size = new Size(66, 15);
-            label2.TabIndex = 0;
-            label2.Text = "User name:";
             // 
             // label1
             // 
@@ -552,13 +568,17 @@
             // 
             // btnRetrieveData
             // 
+            btnRetrieveData.BackColor = Color.MediumSlateBlue;
             btnRetrieveData.Dock = DockStyle.Bottom;
-            btnRetrieveData.Location = new Point(0, 345);
+            btnRetrieveData.FlatStyle = FlatStyle.Popup;
+            btnRetrieveData.Font = new Font("Segoe UI", 14F);
+            btnRetrieveData.ForeColor = Color.WhiteSmoke;
+            btnRetrieveData.Location = new Point(0, 330);
             btnRetrieveData.Name = "btnRetrieveData";
-            btnRetrieveData.Size = new Size(719, 23);
+            btnRetrieveData.Size = new Size(719, 38);
             btnRetrieveData.TabIndex = 2;
             btnRetrieveData.Text = "OK";
-            btnRetrieveData.UseVisualStyleBackColor = true;
+            btnRetrieveData.UseVisualStyleBackColor = false;
             btnRetrieveData.Click += btnRetrieveData_Click;
             // 
             // connectionCheckTimer
@@ -594,6 +614,8 @@
             splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainer1).EndInit();
             splitContainer1.ResumeLayout(false);
+            groupBox5.ResumeLayout(false);
+            groupBox5.PerformLayout();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             groupBox4.ResumeLayout(false);
@@ -657,5 +679,6 @@
         private Label lblTimedTrafficPercentage;
         private Label lblTimedDaysPercentage;
         private NotifyIcon trayIcon;
+        private GroupBox groupBox5;
     }
 }
