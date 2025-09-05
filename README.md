@@ -31,6 +31,8 @@ Currently, the process requires the user to log in at startup and wait for about
 - Run the application.
 
 ## How to Use
+Plseae note that tutorial with images located [here](#screenshots)
+
 - Open the application.
 - Log in with your TCI account details.
     - Please pay attention to **do not** press enter key during this procces. If enter key is pressed, you may need to close and re-open the application.
