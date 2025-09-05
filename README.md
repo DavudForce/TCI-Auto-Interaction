@@ -120,7 +120,7 @@ Contact information is place in the end of this file.
 
 **When I open the program, in the navigation section, it says that I can't reach the site**: This issue is usually because of your internet connection quality. However, sometimes using a VPN can cause this problem too. Try disconnecting from VPN and trying again.
 
-**Error "Server config file not found" and Error "Password file not found"**: Please follow [how to use](#how-to-use) carefully. These errors indicate that server-specifier and security files does not exist and you need to download them.
+**Error "Server config file not found" and Error "Password file not found"**: Please follow [how to download](#how-to-download) carefully. These errors indicate that server-specifier and security files does not exist and you need to download them.
 
 **Error "Invalid hex in password file"**: This error rises when server passfile contains invalid password sytax or invalid data. You may need to re-download the passfile from https://sendgb.com/cmMQUeBVbw1. After downloading, copy the `server.beshonic.k` file and replace it with the existing `server.beshonic.k` file located in the same directory where the executable is present. If you follow these steps and still get the same error, [contact](#contact-us) with the developers and let them know your problem.
 
