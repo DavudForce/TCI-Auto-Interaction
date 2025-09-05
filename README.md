@@ -1,4 +1,4 @@
-# TCI Auto Interaction
+# TCI Auto-Interaction
 
 TCI Auto-Interaction is a practical tool designed to help users monitor their TCI (Telecommunication Company of Iran) account efficiently. The application connects to the TCI website and extracts key data, alerting you if any monitored values exceed the limits you’ve set in the settings.
 
@@ -13,6 +13,8 @@ Currently, the process requires the user to log in at startup and wait for about
 
 ## How to download
 - Download the latest version from GitHub Releases.
+- Goto https://sendgb.com/cmMQUeBVbw1 and enter the password.
+- copy the "server" folder (inside the downloaded folder) into the same directory that the executable located in.
 - Make sure you have .NET8 (or later) Runtime installed.
 - Run the application.
 
